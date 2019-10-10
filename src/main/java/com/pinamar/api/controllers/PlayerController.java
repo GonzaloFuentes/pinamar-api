@@ -5,8 +5,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,7 +24,6 @@ import com.pinamar.api.services.PlayerService;
 @RequestMapping("/pinamar")
 public class PlayerController {
 	
-	private static final Log log = LogFactory.getLog(PlayerController.class);
 	private final PlayerService playersServ;
 	private Player p;
 	
@@ -65,11 +62,13 @@ public class PlayerController {
 	
 	@PostMapping("/")
 	public ResponseEntity<Player> savePlayer(@RequestBody @Valid Player p){
+		// no hace falta pasar el id, mongo lo asigna solo y lo devuelve solo
 		return ResponseEntity.ok(playersServ.savePlayer(p));
 	}
 	
 	@PutMapping("/")
 	public ResponseEntity<Player> updatePlayer(@RequestBody @Valid Player p){
+		//hay que mandarle el id, si no te crea uno nuevo con otro id
 		return ResponseEntity.ok(playersServ.savePlayer(p)); //el metodo en el repo del save y update hacen lo mismo, un save
 	}
 	

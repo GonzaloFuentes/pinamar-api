@@ -3,8 +3,6 @@ package com.pinamar.api.services;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,8 +15,6 @@ import com.pinamar.api.repositorios.PlayerRepositorio;
 @Transactional
 
 public class PlayerServiceImplementation implements PlayerService{
-	
-	private static final Log log = LogFactory.getLog(PlayerServiceImplementation.class);
 	
 	private PlayerRepositorio playerRepo;
 	
