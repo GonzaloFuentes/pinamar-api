@@ -36,7 +36,7 @@ public class PlayerRepoImplementation implements PlayerRepositorio{
 		return Optional.ofNullable(p);
 	}
 	public Optional<List<Player>> findByClub(String club) {
-		List<Player> ps = this.mongoOp.find(new Query(Criteria.where("club").is(club)), Player.class);
+		List<Player> ps = this.mongoOp.find(new Query(Criteria.where("club.name").is(club)), Player.class);
 		return Optional.ofNullable(ps);
 	}
 	public Player savePlayer(Player p) {
