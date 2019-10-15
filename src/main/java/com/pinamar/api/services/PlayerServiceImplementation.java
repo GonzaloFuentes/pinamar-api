@@ -13,7 +13,6 @@ import com.pinamar.api.repositorios.PlayerRepositorio;
 
 @Service("playerService")
 @Transactional
-
 public class PlayerServiceImplementation implements PlayerService{
 	
 	private PlayerRepositorio playerRepo;
@@ -33,7 +32,7 @@ public class PlayerServiceImplementation implements PlayerService{
 		if (player.isPresent())
 			return player.get();
 		else
-			throw new PlayerException("Player with id: " + id + " not found. Please use another id idiot");
+			throw new PlayerException("Player with id: " + id + " not found. Please use another id");
 	}
 
 	public Player findByName(String name) throws PlayerException {
@@ -41,7 +40,7 @@ public class PlayerServiceImplementation implements PlayerService{
 		if (player.isPresent())
 			return player.get();
 		else
-			throw new PlayerException("Player with name: " + name + " not found. Please use another name idiot");
+			throw new PlayerException("Player with name: " + name + " not found. Please use another name");
 	}
 
 	public List<Player> findByClub(String club) throws PlayerException {
@@ -49,7 +48,7 @@ public class PlayerServiceImplementation implements PlayerService{
 		if (players.isPresent())
 			return players.get();
 		else
-			throw new PlayerException("Players with club: " + club + " not found. Please use another club like boquita el mas grande");
+			throw new PlayerException("Players with club: " + club + " not found. Please use another club");
 	}
 
 	public Player savePlayer(Player p) {

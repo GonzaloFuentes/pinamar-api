@@ -26,42 +26,28 @@ public class PlayerRepoImplementation implements PlayerRepositorio{
 		List<Player> players = this.mongoOp.find(new Query(), Player.class);
 		return Optional.ofNullable(players);
 	}
-
-	
 	public Optional<Player> findById(String id) {
 		ObjectId _id = new ObjectId(id);
 		Player p = this.mongoOp.findOne(new Query(Criteria.where("_id").is(_id)), Player.class);
 		return Optional.ofNullable(p);
 	}
-
-	
 	public Optional<Player> findByName(String name) {
 		Player p = this.mongoOp.findOne(new Query(Criteria.where("name").is(name)), Player.class);
 		return Optional.ofNullable(p);
 	}
-
-	
 	public Optional<List<Player>> findByClub(String club) {
 		List<Player> ps = this.mongoOp.find(new Query(Criteria.where("club").is(club)), Player.class);
 		return Optional.ofNullable(ps);
 	}
-
-
 	public Player savePlayer(Player p) {
 		this.mongoOp.save(p);
 		return findById(p.getId()).get();
 	}
-
-
 	public void deletePlayer(String id) {
 		ObjectId _id = new ObjectId(id);
 		this.mongoOp.findAndRemove(new Query(Criteria.where("_id").is(_id)), Player.class);
 	}
-
-
 	public void updatePlayer(Player p) {
 		this.mongoOp.save(p);
-		
 	}
-
 }

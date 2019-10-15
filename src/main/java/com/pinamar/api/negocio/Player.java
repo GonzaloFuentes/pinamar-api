@@ -16,10 +16,10 @@ public class Player implements Serializable{
 	@Id
 	private ObjectId _id;
 	private String name;
-	private String club;
+	private Club club;
 	private int age;
 	
-	public Player(ObjectId _id, String name, String club, int age) {
+	public Player(ObjectId _id, String name, Club club, int age) {
 		super();
 		this._id = _id;
 		this.name = name;
@@ -39,10 +39,10 @@ public class Player implements Serializable{
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getClub() {
+	public Club getClub() {
 		return club;
 	}
-	public void setClub(String club) {
+	public void setClub(Club club) {
 		this.club = club;
 	}
 	public int getAge() {
@@ -54,6 +54,6 @@ public class Player implements Serializable{
 	
 	@Override
 	public String toString() {
-		return "Player id: " + _id + ", name: " + name + ", club: " + club + ", age: " + age;
+		return "Player id: " + _id + ", name: " + name + ", club: " + club.getName() + ", age: " + age;
 	}
 }
