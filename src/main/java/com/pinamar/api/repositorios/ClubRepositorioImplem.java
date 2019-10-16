@@ -45,7 +45,7 @@ public class ClubRepositorioImplem implements ClubRepositorio {
 
 	public Club saveClub(Club c) {
 		this.mongoOp.save(c);
-		return findById(c.getId()).get();
+		return c;
 	}
 
 	public void deleteClub(String id) {

@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pinamar.api.exceptions.PlayerException;
-import com.pinamar.api.negocio.Club;
 import com.pinamar.api.negocio.Player;
 import com.pinamar.api.services.PlayerService;
 
@@ -67,8 +65,6 @@ public class PlayerController {
 		//si necesito una coleccion de clubes, tengo que recibir el id como parametro y buscarlo
 		//no existe un join en mongo ya que son colecciones y no tablas
 		//si al club accedo a traves del jugador, el id seria al pedo
-		Club c = new Club(new ObjectId(), "La Pachorra", 2008, "Argentina", "Interno");
-		p.setClub(c);
 		// no hace falta pasar el id al jugador, mongo lo asigna solo y lo devuelve solo
 		return ResponseEntity.ok(playersServ.savePlayer(p));
 	}
