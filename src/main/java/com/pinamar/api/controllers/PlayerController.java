@@ -73,7 +73,7 @@ public class PlayerController {
 	public ResponseEntity<Player> updatePlayer(@RequestBody @Valid Player p){
 		//hay que mandarle el id, si no te crea uno nuevo con otro id
 		//hay que pasar el objeto completo con sus colecciones dentro tambien, si no borra lo que no se manda. Por ejemplo, si no mando el club lo pone null y lo borra de la base
-		//sino se puede hacer un get por el id y a ese setear los nuevos valores recibidos y guardar el buscado actualizado, como se hace aca
+		//sino se puede hacer un get por el id y a ese setear los nuevos valores recibidos y guardar el buscado actualizado, como se hace aca. esto sirve si mando un json con los valores que quiero actaulizar y no todos
 		//otra es recibir el id y los campos a cambiar, hacer el find y setear los nuevos valores
 		//lo mejor seria mandar el objeto entero y guardarlo directo. Por logica, yo antes hago un get y tengo todo, modifico lo que quiero y lo vuelvo a mandar.
 		Player aux = playersServ.findById(p.getId());
