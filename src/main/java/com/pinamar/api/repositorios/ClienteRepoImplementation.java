@@ -11,6 +11,10 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import com.pinamar.api.negocio.Cliente;
+import com.pinamar.api.negocio.Empleado;
+import com.pinamar.api.negocio.EmpleadoFijo;
+import com.pinamar.api.negocio.EmpleadoPorHora;
+import com.pinamar.api.negocio.EmpleadoView;
 
 @Repository
 public class ClienteRepoImplementation implements ClienteRepositorio{
@@ -45,6 +49,27 @@ public class ClienteRepoImplementation implements ClienteRepositorio{
 	}
 	public void updateCliente(Cliente c) {
 		this.mongoOp.save(c);
+	}
+	
+	public Optional<EmpleadoView> findEmpleadoById(String id) {
+		ObjectId _id = new ObjectId(id);
+		EmpleadoView e = this.mongoOp.findOne(new Query(Criteria.where("_id").is(_id)), EmpleadoView.class);
+		return Optional.ofNullable(e);
+	}
+	public Empleado saveEmpleadoFijo(EmpleadoFijo e) {
+		EmpleadoView aux = new EmpleadoView(new ObjectId(e.getId()), e.getDni(), e.getNombre(), e.getDireccion(), e.getPuesto(), e.getFechaIngreso(), "FIJO", e.getTipoLiquidacion(), 0, 0, e.getSueldoBase(), e.getHorasExtra(), e.getDiasAusentes(), e.getDiasEnfermedad(), e.getDiasVacaciones(), e.getFeriados(), e.getDiasTrabajados());
+		this.mongoOp.save(aux);
+		EmpleadoView emp = findEmpleadoById(aux.getId()).get();
+		e.setId(new ObjectId(emp.getId()));
+		return e;
+	}
+
+	public Empleado saveEmpleadoHora(EmpleadoPorHora e) {
+		EmpleadoView aux = new EmpleadoView(new ObjectId(e.getId()), e.getDni(), e.getNombre(), e.getDireccion(), e.getPuesto(), e.getFechaIngreso(), "POR HORA", e.getTipoLiquidacion(), e.getValorHora(), e.getHorasTrabajadas(), 0, 0, 0, 0, 0, 0, 0);
+		this.mongoOp.save(aux);
+		EmpleadoView emp = findEmpleadoById(aux.getId()).get();
+		e.setId(new ObjectId(emp.getId()));
+		return e;
 	}
 	
 }

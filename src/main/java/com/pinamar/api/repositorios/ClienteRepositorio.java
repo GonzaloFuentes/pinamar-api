@@ -4,6 +4,10 @@ import java.util.List;
 import java.util.Optional;
 
 import com.pinamar.api.negocio.Cliente;
+import com.pinamar.api.negocio.Empleado;
+import com.pinamar.api.negocio.EmpleadoFijo;
+import com.pinamar.api.negocio.EmpleadoPorHora;
+import com.pinamar.api.negocio.EmpleadoView;
 
 public interface ClienteRepositorio{
 	
@@ -16,4 +20,7 @@ public interface ClienteRepositorio{
 	public Cliente saveCliente(Cliente c);
 	public void deleteCliente(String id);
 	public void updateCliente(Cliente c);
+	public Empleado saveEmpleadoFijo(EmpleadoFijo empF);
+	public Empleado saveEmpleadoHora(EmpleadoPorHora empH);
+	public Optional<EmpleadoView> findEmpleadoById(String _id);
 }

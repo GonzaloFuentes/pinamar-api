@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @Document(collection = "empleados")
-@JsonPropertyOrder({"_id", "dni", "nombre", "direccion", "puesto", "fechaIngreso", "valorHora", "horasTrabajadas", "valorMes", "valorQuincena", "valorMes", "horasExtras", "diasAusentes", "diasEnfermedad", "diasVacaciones"})
+@JsonPropertyOrder({"_id", "dni", "nombre", "direccion", "puesto", "fechaIngreso", "tipo", "tipoLiquidacion", "valorHora", "horasTrabajadas", "sueldoBase", "horasExtras", "diasAusentes", "diasEnfermedad", "diasVacaciones", "feriados", "diasTrabajados"})
 public class EmpleadoView {
 
 	@Id
@@ -19,19 +19,20 @@ public class EmpleadoView {
 	private String direccion;
 	private String puesto;
 	private Date fechaIngreso;
+	private String tipo;
+	private String tipoLiquidacion;
 	private double valorHora;
 	private int horasTrabajadas;
-	private double valorMes;
-	private double valorQuincena;
-	private double valorSemana;
+	private double sueldoBase;
 	private int horasExtras;
 	private int diasAusentes;
 	private int diasEnfermedad;
 	private int diasVacaciones;
+	private int feriados;
+	private int diasTrabajados;
 	
 	public EmpleadoView(ObjectId _id, int dni, String nombre, String direccion, String puesto,
-			Date fechaIngreso, double valorHora, int horasTrabajadas, double valorMes, double valorQuincena,
-			double valorSemana, int horasExtras, int diasAusentes, int diasEnfermedad, int diasVacaciones) {
+			Date fechaIngreso, String tipo, String tipoLiquidacion, double valorHora, int horasTrabajadas, double sueldoBase, int horasExtras, int diasAusentes, int diasEnfermedad, int diasVacaciones, int feriados, int diasTrabajados) {
 		super();
 		this._id = _id;
 		this.dni = dni;
@@ -39,15 +40,17 @@ public class EmpleadoView {
 		this.direccion = direccion;
 		this.puesto = puesto;
 		this.fechaIngreso = fechaIngreso;
+		this.tipo = tipo;
+		this.tipoLiquidacion = tipoLiquidacion;
 		this.valorHora = valorHora;
 		this.horasTrabajadas = horasTrabajadas;
-		this.valorMes = valorMes;
-		this.valorQuincena = valorQuincena;
-		this.valorSemana = valorSemana;
+		this.sueldoBase = sueldoBase;
 		this.horasExtras = horasExtras;
 		this.diasAusentes = diasAusentes;
 		this.diasEnfermedad = diasEnfermedad;
 		this.diasVacaciones = diasVacaciones;
+		this.feriados = feriados;
+		this.diasTrabajados = diasTrabajados;
 	}
 
 	public String getId() {
@@ -86,6 +89,12 @@ public class EmpleadoView {
 	public void setFechaIngreso(Date fechaIngreso) {
 		this.fechaIngreso = fechaIngreso;
 	}
+	public String getTipo() {
+		return tipo;
+	}
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
+	}
 	public double getValorHora() {
 		return valorHora;
 	}
@@ -98,23 +107,17 @@ public class EmpleadoView {
 	public void setHorasTrabajadas(int horasTrabajadas) {
 		this.horasTrabajadas = horasTrabajadas;
 	}
-	public double getValorMes() {
-		return valorMes;
+	public String getTipoLiquidacion() {
+		return tipoLiquidacion;
 	}
-	public void setValorMes(double valorMes) {
-		this.valorMes = valorMes;
+	public void setTipoLiquidacion(String tipoLiquidacion) {
+		this.tipoLiquidacion = tipoLiquidacion;
 	}
-	public double getValorQuincena() {
-		return valorQuincena;
+	public double getSueldoBase() {
+		return sueldoBase;
 	}
-	public void setValorQuincena(double valorQuincena) {
-		this.valorQuincena = valorQuincena;
-	}
-	public double getValorSemana() {
-		return valorSemana;
-	}
-	public void setValorSemana(double valorSemana) {
-		this.valorSemana = valorSemana;
+	public void setSueldoBase(double sueldoBase) {
+		this.sueldoBase = sueldoBase;
 	}
 	public int getHorasExtras() {
 		return horasExtras;
@@ -140,5 +143,16 @@ public class EmpleadoView {
 	public void setDiasVacaciones(int diasVacaciones) {
 		this.diasVacaciones = diasVacaciones;
 	}
-	
+	public int getFeriados() {
+		return feriados;
+	}
+	public void setFeriados(int feriados) {
+		this.feriados = feriados;
+	}
+	public int getDiasTrabajados() {
+		return diasTrabajados;
+	}
+	public void setDiasTrabajados(int diasTrabajados) {
+		this.diasTrabajados = diasTrabajados;
+	}
 }

@@ -5,7 +5,7 @@ import java.util.Date;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 
-public abstract class Empleado {
+public class Empleado {
 	
 	@Id
 	private ObjectId _id;
@@ -14,16 +14,25 @@ public abstract class Empleado {
 	private String direccion;
 	private String puesto;
 	private Date fechaIngreso;
+	private String tipoLiquidacion;
 	
-	public Empleado(int dni, String nombre, String direccion, String puesto, Date fechaIngreso) {
+	public Empleado(ObjectId _id, int dni, String nombre, String direccion, String puesto, Date fechaIngreso, String tipoLiquidacion) {
 		super();
+		this._id = _id;
 		this.dni = dni;
 		this.nombre = nombre;
 		this.direccion = direccion;
 		this.puesto = puesto;
 		this.fechaIngreso = fechaIngreso;
+		this.tipoLiquidacion = tipoLiquidacion;
 	}
 
+	public String getId() {
+		return _id.toHexString();
+	}
+	public void setId(ObjectId _id) {
+		this._id = _id;
+	}
 	public int getDni() {
 		return dni;
 	}
@@ -53,6 +62,12 @@ public abstract class Empleado {
 	}
 	public void setFechaIngreso(Date fechaIngreso) {
 		this.fechaIngreso = fechaIngreso;
+	}
+	public String getTipoLiquidacion() {
+		return tipoLiquidacion;
+	}
+	public void setTipoLiquidacion(String tipoLiquidacion) {
+		this.tipoLiquidacion = tipoLiquidacion;
 	}
 	
 }

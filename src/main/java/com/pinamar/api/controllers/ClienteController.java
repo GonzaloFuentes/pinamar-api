@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,10 +14,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pinamar.api.exceptions.ClienteException;
+import com.pinamar.api.exceptions.EmpleadoException;
 import com.pinamar.api.negocio.Cliente;
+import com.pinamar.api.negocio.Empleado;
+import com.pinamar.api.negocio.EmpleadoFijo;
+import com.pinamar.api.negocio.EmpleadoPorHora;
+import com.pinamar.api.negocio.EmpleadoView;
 import com.pinamar.api.services.ClienteService;
 
 @RestController
@@ -47,6 +54,27 @@ public class ClienteController {
 		return ResponseEntity.ok(c);
 	}
 	
+	@GetMapping("/empleados/{_id}")
+	public ResponseEntity<Empleado> getEmpleadoById(@PathVariable("_id") String _id) throws EmpleadoException{
+		EmpleadoView empV;
+		EmpleadoFijo empF = null;
+		EmpleadoPorHora empH = null;
+		try {
+			empV = clientesServ.findEmpleadoById(_id);
+			if(empV.getTipo().equalsIgnoreCase("FIJO"))
+				empF = new EmpleadoFijo(new ObjectId(empV.getId()), empV.getDni(), empV.getNombre(), empV.getDireccion(), empV.getPuesto(), empV.getFechaIngreso(), empV.getTipoLiquidacion(), empV.getSueldoBase(), empV.getDiasAusentes(), empV.getDiasEnfermedad(), empV.getDiasVacaciones(), empV.getHorasExtras(), empV.getFeriados(), empV.getDiasTrabajados());
+			else
+				empH = new EmpleadoPorHora(new ObjectId(empV.getId()), empV.getDni(), empV.getNombre(), empV.getDireccion(), empV.getPuesto(), empV.getFechaIngreso(), empV.getTipoLiquidacion(), empV.getValorHora(), empV.getHorasTrabajadas());
+		}
+		catch(EmpleadoException e) {
+			empF = null;
+			empH = null;
+		}
+		if (empF != null)
+			return ResponseEntity.ok(empF);
+		else return ResponseEntity.ok(empH);
+	}
+	
 	@PostMapping("/")
 	public ResponseEntity<Cliente> saveCliente(@RequestBody @Valid Cliente c){
 		//debo recibir el objeto completo pero como tengo dos array, creo que debe mandar los arrays inicilizados y nada mas
@@ -68,7 +96,10 @@ public class ClienteController {
 		return ResponseEntity.ok(clientesServ.saveCliente(aux)); //el metodo en el repo del save y update hacen lo mismo -> un save
 	}
 	
-	
+	@PostMapping("/empleados")
+	public ResponseEntity<Empleado> saveEmpleado(@RequestBody @Valid Empleado e, @RequestParam String tipo, @RequestParam double valor, @RequestParam String id_cliente) {
+		return ResponseEntity.ok(clientesServ.saveEmpleado(e, tipo, valor));
+	}
 	
 	@DeleteMapping("/{_id}")
 	public ResponseEntity<Void> deleteCliente(@PathVariable String _id){

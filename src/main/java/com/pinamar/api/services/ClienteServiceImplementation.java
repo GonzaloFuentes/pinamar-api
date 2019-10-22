@@ -3,12 +3,18 @@ package com.pinamar.api.services;
 import java.util.List;
 import java.util.Optional;
 
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.pinamar.api.exceptions.ClienteException;
+import com.pinamar.api.exceptions.EmpleadoException;
 import com.pinamar.api.negocio.Cliente;
+import com.pinamar.api.negocio.Empleado;
+import com.pinamar.api.negocio.EmpleadoFijo;
+import com.pinamar.api.negocio.EmpleadoPorHora;
+import com.pinamar.api.negocio.EmpleadoView;
 import com.pinamar.api.repositorios.ClienteRepositorio;
 
 @Service("clienteService")
@@ -53,6 +59,25 @@ public class ClienteServiceImplementation implements ClienteService{
 
 	public void updateCliente(Cliente c) {
 		clienteRepo.updateCliente(c);
+	}
+	
+	public EmpleadoView findEmpleadoById(String _id) {
+		Optional<EmpleadoView> e = clienteRepo.findEmpleadoById(_id);
+		if(e.isPresent())
+			return e.get();
+		else
+			throw new EmpleadoException("Empleado con el id: " + _id + " no encontrado.");
+	}
+
+	public Empleado saveEmpleado(Empleado e, String tipo, double valor) {
+		if(tipo.equalsIgnoreCase("FIJO")) {
+			EmpleadoFijo empF = new EmpleadoFijo(new ObjectId(), e.getDni(), e.getNombre(), e.getDireccion(), e.getPuesto(), e.getFechaIngreso(), e.getTipoLiquidacion(), valor, 0, 0, 0, 0, 0, 0);
+			return clienteRepo.saveEmpleadoFijo(empF);
+		}
+		else { //Si no es es fijo, es por hora
+			EmpleadoPorHora empH = new EmpleadoPorHora(new ObjectId(), e.getDni(), e.getNombre(), e.getDireccion(), e.getPuesto(), e.getFechaIngreso(), e.getTipoLiquidacion(), valor, 0);
+			return clienteRepo.saveEmpleadoHora(empH);
+		}
 	}
 
 }
