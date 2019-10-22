@@ -39,11 +39,13 @@ public class ClienteController {
 
 	@GetMapping("")
 	public ResponseEntity<List<Cliente>> getAllClientes() {
+		//no devuelve los empleados, solo el id
 		return ResponseEntity.ok(clientesServ.getAllClientes());
 	}
 	
 	@GetMapping("/{_id}")
 	public ResponseEntity<Cliente> getClienteById(@PathVariable("_id") String _id) throws ClienteException{
+		//no devuelve los empleados, solo el id
 		try {
 			c = clientesServ.findById(_id);
 		}
@@ -67,9 +69,9 @@ public class ClienteController {
 		try {
 			empV = clientesServ.findEmpleadoById(_id);
 			if(empV.getTipo().equalsIgnoreCase("FIJO"))
-				empF = new EmpleadoFijo(new ObjectId(empV.getId()), empV.getDni(), empV.getNombre(), empV.getDireccion(), empV.getPuesto(), empV.getFechaIngreso(), empV.getTipoLiquidacion(), empV.getSueldoBase(), empV.getDiasAusentes(), empV.getDiasEnfermedad(), empV.getDiasVacaciones(), empV.getHorasExtras(), empV.getFeriados(), empV.getDiasTrabajados());
+				empF = new EmpleadoFijo(new ObjectId(empV.getId()), empV.getDni(), empV.getNombre(), empV.getDireccion(), empV.getPuesto(), empV.getFechaIngreso(), empV.getTipoLiquidacion(), empV.getSueldoBase(), empV.getDiasAusentes(), empV.getDiasEnfermedad(), empV.getDiasVacaciones(), empV.getHorasExtras(), empV.getFeriados(), empV.getDiasTrabajados(), empV.getConceptos(), empV.getCbu());
 			else
-				empH = new EmpleadoPorHora(new ObjectId(empV.getId()), empV.getDni(), empV.getNombre(), empV.getDireccion(), empV.getPuesto(), empV.getFechaIngreso(), empV.getTipoLiquidacion(), empV.getValorHora(), empV.getHorasTrabajadas());
+				empH = new EmpleadoPorHora(new ObjectId(empV.getId()), empV.getDni(), empV.getNombre(), empV.getDireccion(), empV.getPuesto(), empV.getFechaIngreso(), empV.getTipoLiquidacion(), empV.getValorHora(), empV.getHorasTrabajadas(), empV.getConceptos(), empV.getCbu());
 		}
 		catch(EmpleadoException e) {
 			empF = null;

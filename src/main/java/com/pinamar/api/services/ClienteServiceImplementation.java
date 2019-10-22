@@ -75,11 +75,11 @@ public class ClienteServiceImplementation implements ClienteService{
 
 	public Empleado saveEmpleado(Empleado e, String tipo, double valor) {
 		if(tipo.equalsIgnoreCase("FIJO")) {
-			EmpleadoFijo empF = new EmpleadoFijo(new ObjectId(), e.getDni(), e.getNombre(), e.getDireccion(), e.getPuesto(), e.getFechaIngreso(), e.getTipoLiquidacion(), valor, 0, 0, 0, 0, 0, 0);
+			EmpleadoFijo empF = new EmpleadoFijo(new ObjectId(), e.getDni(), e.getNombre(), e.getDireccion(), e.getPuesto(), e.getFechaIngreso(), e.getTipoLiquidacion(), valor, 0, 0, 0, 0, 0, 0, e.getConceptos(), e.getCbu());
 			return clienteRepo.saveEmpleadoFijo(empF);
 		}
 		else { //Si no es es fijo, es por hora
-			EmpleadoPorHora empH = new EmpleadoPorHora(new ObjectId(), e.getDni(), e.getNombre(), e.getDireccion(), e.getPuesto(), e.getFechaIngreso(), e.getTipoLiquidacion(), valor, 0);
+			EmpleadoPorHora empH = new EmpleadoPorHora(new ObjectId(), e.getDni(), e.getNombre(), e.getDireccion(), e.getPuesto(), e.getFechaIngreso(), e.getTipoLiquidacion(), valor, 0, e.getConceptos(), e.getCbu());
 			return clienteRepo.saveEmpleadoHora(empH);
 		}
 	}

@@ -35,7 +35,7 @@ public class EmpleadoView {
 	private String cbu;
 	
 	public EmpleadoView(ObjectId _id, int dni, String nombre, String direccion, String puesto,
-			Date fechaIngreso, String tipo, String tipoLiquidacion, double valorHora, int horasTrabajadas, double sueldoBase, int horasExtras, int diasAusentes, int diasEnfermedad, int diasVacaciones, int feriados, int diasTrabajados) {
+			Date fechaIngreso, String tipo, String tipoLiquidacion, double valorHora, int horasTrabajadas, double sueldoBase, int horasExtras, int diasAusentes, int diasEnfermedad, int diasVacaciones, int feriados, int diasTrabajados, List<Concepto> conceptos, String cbu) {
 		super();
 		this._id = _id;
 		this.dni = dni;
@@ -54,6 +54,8 @@ public class EmpleadoView {
 		this.diasVacaciones = diasVacaciones;
 		this.feriados = feriados;
 		this.diasTrabajados = diasTrabajados;
+		this.conceptos = conceptos;
+		this.cbu = cbu;
 	}
 
 	public String getId() {
@@ -157,5 +159,23 @@ public class EmpleadoView {
 	}
 	public void setDiasTrabajados(int diasTrabajados) {
 		this.diasTrabajados = diasTrabajados;
+	}
+	public List<Concepto> getConceptos() {
+		return conceptos;
+	}
+	public void setConceptos(List<Concepto> conceptos) {
+		this.conceptos = conceptos;
+	}
+	public void addConcepto(Concepto c) {
+		this.conceptos.add(c);
+	}
+	public void removeConcepto(Concepto c) {
+		this.conceptos.remove(c);
+	}
+	public String getCbu() {
+		return cbu;
+	}
+	public void setCbu(String cbu) {
+		this.cbu = cbu;
 	}
 }

@@ -18,8 +18,8 @@ public class Empleado {
 	private String tipoLiquidacion;
 	private List<Concepto> conceptos;
 	private String cbu;
-	
-	public Empleado(ObjectId _id, int dni, String nombre, String direccion, String puesto, Date fechaIngreso, String tipoLiquidacion) {
+
+	public Empleado(ObjectId _id, int dni, String nombre, String direccion, String puesto, Date fechaIngreso, String tipoLiquidacion, List<Concepto> conceptos, String cbu) {
 		super();
 		this._id = _id;
 		this.dni = dni;
@@ -28,6 +28,8 @@ public class Empleado {
 		this.puesto = puesto;
 		this.fechaIngreso = fechaIngreso;
 		this.tipoLiquidacion = tipoLiquidacion;
+		this.conceptos = conceptos;
+		this.cbu = cbu;
 	}
 
 	public String getId() {
@@ -71,6 +73,24 @@ public class Empleado {
 	}
 	public void setTipoLiquidacion(String tipoLiquidacion) {
 		this.tipoLiquidacion = tipoLiquidacion;
+	}
+	public List<Concepto> getConceptos() {
+		return conceptos;
+	}
+	public void setConceptos(List<Concepto> conceptos) {
+		this.conceptos = conceptos;
+	}
+	public void addConcepto(Concepto c) {
+		this.conceptos.add(c);
+	}
+	public void removeConcepto(Concepto c) {
+		this.conceptos.remove(c);
+	}
+	public String getCbu() {
+		return cbu;
+	}
+	public void setCbu(String cbu) {
+		this.cbu = cbu;
 	}
 	
 }

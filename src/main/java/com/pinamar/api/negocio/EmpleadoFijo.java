@@ -1,6 +1,7 @@
 package com.pinamar.api.negocio;
 
 import java.util.Date;
+import java.util.List;
 
 import org.bson.types.ObjectId;
 
@@ -14,8 +15,8 @@ public class EmpleadoFijo extends Empleado {
 	private int feriados; //sueldo base / 30 * 2 * dia
 	private int diasTrabajados; //si es mensual 30-ausentes-enfermedad-vacaciones
 	
-	public EmpleadoFijo(ObjectId _id, int dni, String nombre, String direccion, String puesto, Date fechaIngreso, String tipoLiquidacion, double sueldoBase, int diasAusentes, int diasEnfermedad, int diasVacaciones, int horasExtra, int feriados, int diasTrabajados) {
-		super(_id, dni, nombre, direccion, puesto, fechaIngreso, tipoLiquidacion);
+	public EmpleadoFijo(ObjectId _id, int dni, String nombre, String direccion, String puesto, Date fechaIngreso, String tipoLiquidacion, double sueldoBase, int diasAusentes, int diasEnfermedad, int diasVacaciones, int horasExtra, int feriados, int diasTrabajados, List<Concepto> conceptos, String cbu) {
+		super(_id, dni, nombre, direccion, puesto, fechaIngreso, tipoLiquidacion, conceptos, cbu);
 		this.sueldoBase = sueldoBase;
 		this.diasAusentes = diasAusentes;
 		this.diasEnfermedad = diasEnfermedad;
