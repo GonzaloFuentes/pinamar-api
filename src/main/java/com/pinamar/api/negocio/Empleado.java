@@ -1,6 +1,7 @@
 package com.pinamar.api.negocio;
 
 import java.util.Date;
+import java.util.List;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -15,6 +16,8 @@ public class Empleado {
 	private String puesto;
 	private Date fechaIngreso;
 	private String tipoLiquidacion;
+	private List<Concepto> conceptos;
+	private String cbu;
 	
 	public Empleado(ObjectId _id, int dni, String nombre, String direccion, String puesto, Date fechaIngreso, String tipoLiquidacion) {
 		super();

@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @Document(collection = "clientes")
-@JsonPropertyOrder({"_id", "cuit", "nombre", "fisico", "empleados_id", "conceptos", "password"})
+@JsonPropertyOrder({"_id", "cuit", "nombre", "fisico", "empleados_id", "password"})
 public class Cliente implements Serializable{
 	
 	private static final long serialVersionUID = 6458521016596172276L;
@@ -21,7 +21,6 @@ public class Cliente implements Serializable{
 	private String nombre;
 	private boolean fisico;
 	private List<ObjectId> empleados_id;
-	private List<Concepto> conceptos;
 	private String password;
 	private List<ObjectId> liquidaciones;
 
@@ -33,7 +32,6 @@ public class Cliente implements Serializable{
 		this.fisico = fisico;
 		this.password = password;
 		this.empleados_id = new ArrayList<ObjectId>();
-		this.conceptos = new ArrayList<Concepto>();
 		this.liquidaciones = new ArrayList<ObjectId>();
 	}
 	
@@ -72,18 +70,6 @@ public class Cliente implements Serializable{
 	}
 	public void removeEmpleado(ObjectId _id) {
 		this.empleados_id.remove(_id);
-	}
-	public List<Concepto> getConceptos() {
-		return conceptos;
-	}
-	public void setConceptos(List<Concepto> conceptos) {
-		this.conceptos = conceptos;
-	}
-	public void addConcepto(Concepto c) {
-		this.conceptos.add(c);
-	}
-	public void removeConcepto(Concepto c) {
-		this.conceptos.remove(c);
 	}
 	public String getPassword() {
 		return password;

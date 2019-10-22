@@ -1,6 +1,7 @@
 package com.pinamar.api.negocio;
 
 import java.util.Date;
+import java.util.List;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -9,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @Document(collection = "empleados")
-@JsonPropertyOrder({"_id", "dni", "nombre", "direccion", "puesto", "fechaIngreso", "tipo", "tipoLiquidacion", "valorHora", "horasTrabajadas", "sueldoBase", "horasExtras", "diasAusentes", "diasEnfermedad", "diasVacaciones", "feriados", "diasTrabajados"})
+@JsonPropertyOrder({"_id", "dni", "nombre", "direccion", "puesto", "fechaIngreso", "tipo", "tipoLiquidacion", "valorHora", "horasTrabajadas", "sueldoBase", "horasExtras", "diasAusentes", "diasEnfermedad", "diasVacaciones", "feriados", "diasTrabajados", "conceptos", "cbu"})
 public class EmpleadoView {
 
 	@Id
@@ -30,6 +31,8 @@ public class EmpleadoView {
 	private int diasVacaciones;
 	private int feriados;
 	private int diasTrabajados;
+	private List<Concepto> conceptos;
+	private String cbu;
 	
 	public EmpleadoView(ObjectId _id, int dni, String nombre, String direccion, String puesto,
 			Date fechaIngreso, String tipo, String tipoLiquidacion, double valorHora, int horasTrabajadas, double sueldoBase, int horasExtras, int diasAusentes, int diasEnfermedad, int diasVacaciones, int feriados, int diasTrabajados) {

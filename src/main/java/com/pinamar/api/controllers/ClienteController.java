@@ -80,6 +80,20 @@ public class ClienteController {
 		else return ResponseEntity.ok(empH);
 	}
 	
+	@GetMapping("/login/{cuit}/{password}")
+	public ResponseEntity<Cliente> login(@PathVariable("cuit") String cuit, @PathVariable("password") String password) throws ClienteException{
+		try {
+			c = clientesServ.findByCuit(cuit);
+			if(!c.getPassword().equalsIgnoreCase(password)) {
+				c = null;
+			}
+		}
+		catch(ClienteException e) {
+			c = null;
+		}
+		return ResponseEntity.ok(c);
+	}
+	
 	@PostMapping("/")
 	public ResponseEntity<Cliente> saveCliente(@RequestBody @Valid Cliente c){
 		//debo recibir el objeto completo pero como tengo dos array, creo que debe mandar los arrays inicilizados y nada mas
