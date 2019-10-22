@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pinamar.api.exceptions.ClienteException;
@@ -96,9 +95,13 @@ public class ClienteController {
 		return ResponseEntity.ok(clientesServ.saveCliente(aux)); //el metodo en el repo del save y update hacen lo mismo -> un save
 	}
 	
-	@PostMapping("/empleados")
-	public ResponseEntity<Empleado> saveEmpleado(@RequestBody @Valid Empleado e, @RequestParam String tipo, @RequestParam double valor, @RequestParam String id_cliente) {
-		return ResponseEntity.ok(clientesServ.saveEmpleado(e, tipo, valor));
+	@PostMapping("/empleados/{tipo}/{valor}/{cuit}")
+	public ResponseEntity<Empleado> saveEmpleado(@RequestBody @Valid Empleado e, @PathVariable("tipo") String tipo, @PathVariable("valor") double valor, @PathVariable("cuit") String cuit) {
+		Cliente c = clientesServ.findByCuit(cuit);
+		Empleado aux = clientesServ.saveEmpleado(e, tipo, valor);
+		c.addEmpleado(new ObjectId(aux.getId()));
+		clientesServ.saveCliente(c);
+		return ResponseEntity.ok(aux);
 	}
 	
 	@DeleteMapping("/{_id}")
