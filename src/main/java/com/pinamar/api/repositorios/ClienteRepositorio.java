@@ -23,4 +23,5 @@ public interface ClienteRepositorio{
 	public Empleado saveEmpleadoFijo(EmpleadoFijo empF);
 	public Empleado saveEmpleadoHora(EmpleadoPorHora empH);
 	public Optional<EmpleadoView> findEmpleadoById(String _id);
+	List<Empleado> getEmpleadosByCliente(Cliente c);
 }

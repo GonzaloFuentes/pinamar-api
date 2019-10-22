@@ -1,5 +1,6 @@
 package com.pinamar.api.repositorios;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -70,6 +71,26 @@ public class ClienteRepoImplementation implements ClienteRepositorio{
 		EmpleadoView emp = findEmpleadoById(aux.getId()).get();
 		e.setId(new ObjectId(emp.getId()));
 		return e;
+	}
+
+	public List<Empleado> getEmpleadosByCliente(Cliente c) {
+		List<ObjectId> empIds = c.getEmpleados_id();
+		List<Empleado> empleados = new ArrayList<Empleado>();
+		for (ObjectId id : empIds) {
+			Optional<EmpleadoView> evo = this.findEmpleadoById(id.toHexString());
+			EmpleadoView ev = evo.get();
+			EmpleadoFijo ef;
+			EmpleadoPorHora eh;
+			if(ev.getTipo().equalsIgnoreCase("FIJO")) {
+				ef = new EmpleadoFijo(new ObjectId(ev.getId()), ev.getDni(), ev.getNombre(), ev.getDireccion(), ev.getPuesto(), ev.getFechaIngreso(), ev.getTipoLiquidacion(), ev.getSueldoBase(), ev.getDiasAusentes(), ev.getDiasEnfermedad(), ev.getDiasVacaciones(), ev.getHorasExtras(), ev.getFeriados(), ev.getDiasTrabajados());
+				empleados.add(ef);
+			}
+			else {
+				eh = new EmpleadoPorHora(new ObjectId(ev.getId()), ev.getDni(), ev.getNombre(), ev.getDireccion(), ev.getPuesto(), ev.getFechaIngreso(), ev.getTipoLiquidacion(), ev.getValorHora(), ev.getHorasTrabajadas());
+				empleados.add(eh);
+			}
+		}
+		return empleados;
 	}
 	
 }

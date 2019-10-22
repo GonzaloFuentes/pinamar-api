@@ -61,6 +61,10 @@ public class ClienteServiceImplementation implements ClienteService{
 		clienteRepo.updateCliente(c);
 	}
 	
+	public List<Empleado> getEmpleadosByCliente(Cliente c) {
+		return clienteRepo.getEmpleadosByCliente(c);
+	}
+	
 	public EmpleadoView findEmpleadoById(String _id) {
 		Optional<EmpleadoView> e = clienteRepo.findEmpleadoById(_id);
 		if(e.isPresent())

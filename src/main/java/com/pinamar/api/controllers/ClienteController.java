@@ -53,6 +53,12 @@ public class ClienteController {
 		return ResponseEntity.ok(c);
 	}
 	
+	@GetMapping("/empleados-cliente/{cuit}")
+	public ResponseEntity<List<Empleado>> getEmpleadosByCliente(@PathVariable("cuit") String cuit){
+		Cliente c = clientesServ.findByCuit(cuit);
+		return ResponseEntity.ok(clientesServ.getEmpleadosByCliente(c));
+	}
+	
 	@GetMapping("/empleados/{_id}")
 	public ResponseEntity<Empleado> getEmpleadoById(@PathVariable("_id") String _id) throws EmpleadoException{
 		EmpleadoView empV;
