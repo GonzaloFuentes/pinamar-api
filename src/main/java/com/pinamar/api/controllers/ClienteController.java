@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.pinamar.api.exceptions.ClienteException;
 import com.pinamar.api.exceptions.EmpleadoException;
 import com.pinamar.api.negocio.Cliente;
+import com.pinamar.api.negocio.Concepto;
 import com.pinamar.api.negocio.Empleado;
 import com.pinamar.api.negocio.EmpleadoFijo;
 import com.pinamar.api.negocio.EmpleadoPorHora;
@@ -102,7 +103,6 @@ public class ClienteController {
 	
 	@PostMapping("/")
 	public ResponseEntity<Cliente> saveCliente(@RequestBody @Valid Cliente c){
-		//debo recibir el objeto completo pero como tengo dos array, creo que debe mandar los arrays inicilizados y nada mas
 		return ResponseEntity.ok(clientesServ.saveCliente(c));
 	}
 	
@@ -167,6 +167,24 @@ public class ClienteController {
 		clientesServ.saveLiquidacion(liq);
 		clientesServ.updateCliente(c); //deberia actualizar al cliente y agregarle un item al array de liquidaciones, nada mas
 		return ResponseEntity.ok(liq);
+	}
+	
+	@PostMapping("/empleados/{_id}/conceptos")
+	public ResponseEntity<Empleado> addConcepto(@RequestBody @Valid Concepto c, @PathVariable("_id") String _id) {
+		EmpleadoView ev = clientesServ.findEmpleadoById(_id);
+		EmpleadoFijo ef;
+		EmpleadoPorHora eh;
+		if(ev.getTipo().equalsIgnoreCase("FIJO")) {
+			ef = new EmpleadoFijo(new ObjectId(ev.getId()), ev.getDni(), ev.getNombre(), ev.getDireccion(), ev.getPuesto(), ev.getFechaIngreso(), ev.getTipoLiquidacion(), ev.getSueldoBase(), ev.getDiasAusentes(), ev.getDiasEnfermedad(), ev.getDiasVacaciones(), ev.getHorasExtras(), ev.getFeriados(), ev.getDiasTrabajados(), ev.getConceptos(), ev.getCbu());
+			ef.addConcepto(c);
+			clientesServ.updateEmpleadoFijo(ef);
+			return ResponseEntity.ok(ef);
+		} else {
+			eh = new EmpleadoPorHora(new ObjectId(ev.getId()), ev.getDni(), ev.getNombre(), ev.getDireccion(), ev.getPuesto(), ev.getFechaIngreso(), ev.getTipoLiquidacion(), ev.getValorHora(), ev.getHorasTrabajadas(), ev.getConceptos(), ev.getCbu());
+			eh.addConcepto(c);
+			clientesServ.updateEmpleadoHora(eh);
+			return ResponseEntity.ok(eh);
+		}
 	}
 	
 	//crear endpoint get liquidacion por id y busque los recibos asi cumple la funcion que evalua
