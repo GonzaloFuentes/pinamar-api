@@ -103,4 +103,12 @@ public class ClienteServiceImplementation implements ClienteService{
 		clienteRepo.saveLiquidacion(liq);
 	}
 
+	public void updateEmpleadoFijo(EmpleadoFijo e) {
+		clienteRepo.updateEmpleadoFijo(e);
+	}
+
+	public void updateEmpleadoHora(EmpleadoPorHora e) {
+		clienteRepo.updateEmpleadoHora(e);
+	}
+
 }

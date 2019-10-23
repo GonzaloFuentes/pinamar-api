@@ -26,5 +26,7 @@ public interface ClienteService {
 	List<EmpleadoPorHora> getEmpleadosHoraByClienteAndTipo(Cliente c, String tipo);
 	public void saveRecibo(Recibo r);
 	public void saveLiquidacion(Liquidacion liq);
+	public void updateEmpleadoFijo(EmpleadoFijo e);
+	public void updateEmpleadoHora(EmpleadoPorHora e);
 
 }

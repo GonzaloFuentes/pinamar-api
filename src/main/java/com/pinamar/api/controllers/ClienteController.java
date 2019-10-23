@@ -130,44 +130,46 @@ public class ClienteController {
 		return ResponseEntity.ok(aux);
 	}
 	
-	@PostMapping("/sueldos/{tipo}")
-	public ResponseEntity<Liquidacion> liquidarSueldos(@PathVariable("tipo") String tipo){ //despues devuelve una liquidacion en vez de void
-		List<Cliente> clientes = clientesServ.getAllClientes();
+	@PostMapping("/sueldos/{cuit}/{tipo}")
+	public ResponseEntity<Liquidacion> liquidarSueldos(@PathVariable("cuit") String cuit, @PathVariable("tipo") String tipo) {
+		c = clientesServ.findByCuit(cuit);
 		Liquidacion liq = null;
-		for (Cliente c : clientes) {
-			List<EmpleadoFijo> empleadosFijos;
-			List<EmpleadoPorHora> empleadosPorHora;
-			empleadosFijos = clientesServ.getEmpleadosFijoByClienteAndTipo(c, tipo);
-			empleadosPorHora = clientesServ.getEmpleadosHoraByClienteAndTipo(c, tipo);
-			int cantidad = empleadosFijos.size() + empleadosPorHora.size();
-			List<ObjectId> rs = new ArrayList<ObjectId>();
-			List<Recibo> recibos = new ArrayList<Recibo>();
-			Recibo rec;
-			for (EmpleadoFijo e : empleadosFijos) {
-				rec = e.liquidarSueldo();
-				rs.add(new ObjectId(rec.getId()));
-				recibos.add(rec);
-			}
-			for (EmpleadoPorHora e : empleadosPorHora) {
-				rec = e.liquidarSueldo();
-				rs.add(new ObjectId(rec.getId()));
-				recibos.add(rec);
-			}
-			double total = 0;
-			for (Recibo r : recibos) {
-				total += r.getSueldoNeto();
-			}
-			liq = new Liquidacion(new ObjectId(), rs, tipo, new Date(), total);
-			c.addLiquidacion(new ObjectId(liq.getId()));
-			//facturar
-			//save de recibos, liquidaciones
-			for (Recibo r : recibos) {
-				clientesServ.saveRecibo(r);
-			}
-			clientesServ.saveLiquidacion(liq);
+		List<EmpleadoFijo> empleadosFijos;
+		List<EmpleadoPorHora> empleadosPorHora;
+		empleadosFijos = clientesServ.getEmpleadosFijoByClienteAndTipo(c, tipo);
+		empleadosPorHora = clientesServ.getEmpleadosHoraByClienteAndTipo(c, tipo);
+		//int cantidad = empleadosFijos.size() + empleadosPorHora.size();
+		List<ObjectId> rs = new ArrayList<ObjectId>();
+		List<Recibo> recibos = new ArrayList<Recibo>();
+		Recibo rec;
+		for (EmpleadoFijo e : empleadosFijos) {
+			rec = e.liquidarSueldo();
+			rs.add(new ObjectId(rec.getId()));
+			recibos.add(rec);
+			clientesServ.updateEmpleadoFijo(e); //deberia actualizar al empleado y agregarle un item al array de recibos, nada mas. el add lo hace dentro del liquidar sueldo
 		}
+		for (EmpleadoPorHora e : empleadosPorHora) {
+			rec = e.liquidarSueldo();
+			rs.add(new ObjectId(rec.getId()));
+			recibos.add(rec);
+			clientesServ.updateEmpleadoHora(e); //deberia actualizar al empleado y agregarle un item al array de recibos, nada mas. el add lo hace dentro del liquidar sueldo
+		}
+		double total = 0;
+		for (Recibo r : recibos) {
+			total += r.getSueldoNeto();
+		}
+		liq = new Liquidacion(new ObjectId(), rs, tipo, new Date(), total);
+		c.addLiquidacion(new ObjectId(liq.getId()));
+		//facturar
+		for (Recibo r : recibos) {
+			clientesServ.saveRecibo(r);
+		}
+		clientesServ.saveLiquidacion(liq);
+		clientesServ.updateCliente(c); //deberia actualizar al cliente y agregarle un item al array de liquidaciones, nada mas
 		return ResponseEntity.ok(liq);
 	}
+	
+	//crear endpoint get liquidacion por id y busque los recibos asi cumple la funcion que evalua
 	
 	@DeleteMapping("/{_id}")
 	public ResponseEntity<Void> deleteCliente(@PathVariable String _id){

@@ -103,7 +103,7 @@ public class ClienteRepoImplementation implements ClienteRepositorio{
 			Optional<EmpleadoView> evo = this.findEmpleadoById(id.toHexString());
 			EmpleadoView ev = evo.get();
 			EmpleadoFijo ef;
-			if(ev.getTipo().equalsIgnoreCase("FIJO")) {
+			if(ev.getTipoLiquidacion().equalsIgnoreCase(tipo) && ev.getTipo().equalsIgnoreCase("FIJO")) {
 				ef = new EmpleadoFijo(new ObjectId(ev.getId()), ev.getDni(), ev.getNombre(), ev.getDireccion(), ev.getPuesto(), ev.getFechaIngreso(), ev.getTipoLiquidacion(), ev.getSueldoBase(), ev.getDiasAusentes(), ev.getDiasEnfermedad(), ev.getDiasVacaciones(), ev.getHorasExtras(), ev.getFeriados(), ev.getDiasTrabajados(), ev.getConceptos(), ev.getCbu());
 				empleados.add(ef);
 			}
@@ -119,7 +119,7 @@ public class ClienteRepoImplementation implements ClienteRepositorio{
 			Optional<EmpleadoView> evo = this.findEmpleadoById(id.toHexString());
 			EmpleadoView ev = evo.get();
 			EmpleadoPorHora eh;
-			if(!ev.getTipo().equalsIgnoreCase("FIJO")) {
+			if(ev.getTipoLiquidacion().equalsIgnoreCase(tipo) && ev.getTipo().equalsIgnoreCase("POR HORA")) {
 				eh = new EmpleadoPorHora(new ObjectId(ev.getId()), ev.getDni(), ev.getNombre(), ev.getDireccion(), ev.getPuesto(), ev.getFechaIngreso(), ev.getTipoLiquidacion(), ev.getValorHora(), ev.getHorasTrabajadas(), ev.getConceptos(), ev.getCbu());
 				empleados.add(eh);
 			}
@@ -133,6 +133,16 @@ public class ClienteRepoImplementation implements ClienteRepositorio{
 
 	public void saveLiquidacion(Liquidacion liq) {
 		this.mongoOp.save(liq);
+	}
+
+	public void updateEmpleadoFijo(EmpleadoFijo e) {
+		EmpleadoView aux = new EmpleadoView(new ObjectId(e.getId()), e.getDni(), e.getNombre(), e.getDireccion(), e.getPuesto(), e.getFechaIngreso(), "FIJO", e.getTipoLiquidacion(), 0, 0, e.getSueldoBase(), e.getHorasExtra(), e.getDiasAusentes(), e.getDiasEnfermedad(), e.getDiasVacaciones(), e.getFeriados(), e.getDiasTrabajados(), e.getConceptos(), e.getCbu(), e.getRecibos());
+		this.mongoOp.save(aux);
+	}
+
+	public void updateEmpleadoHora(EmpleadoPorHora e) {
+		EmpleadoView aux = new EmpleadoView(new ObjectId(e.getId()), e.getDni(), e.getNombre(), e.getDireccion(), e.getPuesto(), e.getFechaIngreso(), "POR HORA", e.getTipoLiquidacion(), e.getValorHora(), e.getHorasTrabajadas(), 0, 0, 0, 0, 0, 0, 0, e.getConceptos(), e.getCbu(), e.getRecibos());
+		this.mongoOp.save(aux);
 	}
 	
 }
