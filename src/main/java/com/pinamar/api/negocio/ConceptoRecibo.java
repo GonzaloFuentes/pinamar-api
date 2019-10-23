@@ -1,16 +1,17 @@
 package com.pinamar.api.negocio;
 
-public class Concepto{
+public class ConceptoRecibo {
 
+	//dentro de recibo, misma coleccion
 	private String nombre;
 	private double valor;
-	private String tipo;
+	private double monto;
 	
-	public Concepto(String nombre, double valor, String tipo) {
+	public ConceptoRecibo(String nombre, double valor, double monto) {
 		super();
 		this.nombre = nombre;
-		this.valor = valor/100;
-		this.tipo = tipo;
+		this.valor = valor;
+		this.monto = monto;
 	}
 
 	public String getNombre() {
@@ -25,10 +26,11 @@ public class Concepto{
 	public void setValor(double valor) {
 		this.valor = valor;
 	}
-	public String getTipo() {
-		return tipo;
+	public double getMonto() {
+		return monto;
 	}
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
+	public void setMonto(double monto) {
+		this.monto = monto;
 	}
+	
 }

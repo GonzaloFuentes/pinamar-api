@@ -1,5 +1,6 @@
 package com.pinamar.api.negocio;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class Empleado {
 	private String tipoLiquidacion;
 	private List<Concepto> conceptos;
 	private String cbu;
+	private List<ObjectId> recibos;
 
 	public Empleado(ObjectId _id, int dni, String nombre, String direccion, String puesto, Date fechaIngreso, String tipoLiquidacion, List<Concepto> conceptos, String cbu) {
 		super();
@@ -30,6 +32,7 @@ public class Empleado {
 		this.tipoLiquidacion = tipoLiquidacion;
 		this.conceptos = conceptos;
 		this.cbu = cbu;
+		this.recibos = new ArrayList<ObjectId>();
 	}
 
 	public String getId() {
@@ -91,6 +94,18 @@ public class Empleado {
 	}
 	public void setCbu(String cbu) {
 		this.cbu = cbu;
+	}
+	public List<ObjectId> getRecibos() {
+		return recibos;
+	}
+	public void setRecibos(List<ObjectId> recibos) {
+		this.recibos = recibos;
+	}
+	public void addRecibo(ObjectId id) {
+		this.recibos.add(id);
+	}
+	public void removeRecibo(ObjectId id) {
+		this.recibos.remove(id);
 	}
 	
 }
