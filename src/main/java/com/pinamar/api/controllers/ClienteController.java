@@ -193,6 +193,7 @@ public class ClienteController {
 		//se devuelve el empleado para mostrar que las novedades se agregaron correctamente
 		EmpleadoView ev = clientesServ.findEmpleadoById(_id);
 		EmpleadoFijo ef = null;
+		EmpleadoPorHora eh = null;
 		if(ev.getTipo().equalsIgnoreCase("FIJO")) {
 			ef = new EmpleadoFijo(new ObjectId(ev.getId()), ev.getDni(), ev.getNombre(), ev.getDireccion(), ev.getPuesto(), ev.getFechaIngreso(), ev.getTipoLiquidacion(), ev.getSueldoBase(), ev.getDiasAusentes(), ev.getDiasEnfermedad(), ev.getDiasVacaciones(), ev.getHorasExtras(), ev.getFeriados(), ev.getDiasTrabajados(), ev.getConceptos(), ev.getCbu());
 			// "diasAusentes", "diasEnfermedad", "diasVacaciones", "horasExtra", "feriados"
@@ -202,11 +203,18 @@ public class ClienteController {
 			ef.setHorasExtra(n.getHorasExtra());
 			ef.setFeriados(n.getFeriados());
 			clientesServ.updateEmpleadoFijo(ef);
-			n.setId_empleado(new ObjectId(ef.getId()));
+			n.setIdEmpleado(new ObjectId(ef.getId()));
 			clientesServ.saveNovedad(n);
 			return ResponseEntity.ok(ef);
 		}
-		return ResponseEntity.ok(ef); //no lo encontro o el empleado es POR HORA y este no tiene novedades
+		else {
+			eh = new EmpleadoPorHora(new ObjectId(ev.getId()), ev.getDni(), ev.getNombre(), ev.getDireccion(), ev.getPuesto(), ev.getFechaIngreso(), ev.getTipoLiquidacion(), ev.getValorHora(), ev.getHorasTrabajadas(), ev.getConceptos(), ev.getCbu());
+			eh.setHorasTrabajadas(n.getHorasTrabajadas());
+			clientesServ.updateEmpleadoHora(eh);
+			n.setIdEmpleado(new ObjectId(eh.getId()));
+			clientesServ.saveNovedad(n);
+			return ResponseEntity.ok(ef);
+		}
 	}
 	
 	//crear endpoint get liquidacion por id y busque los recibos asi cumple la funcion que evalua

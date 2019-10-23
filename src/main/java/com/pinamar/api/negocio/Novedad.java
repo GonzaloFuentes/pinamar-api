@@ -21,9 +21,10 @@ public class Novedad implements Serializable {
 	private int diasVacaciones;
 	private int horasExtra;
 	private int feriados;
+	private int horasTrabajadas;
 	private ObjectId id_empleado;
 	
-	public Novedad(ObjectId _id, int diasAusentes, int diasEnfermedad, int diasVacaciones, int horasExtra, int feriados, ObjectId id_empleado) {
+	public Novedad(ObjectId _id, int diasAusentes, int diasEnfermedad, int diasVacaciones, int horasExtra, int feriados, ObjectId id_empleado, int horasTrabajadas) {
 		super();
 		this._id = _id;
 		this.diasAusentes = diasAusentes;
@@ -32,6 +33,7 @@ public class Novedad implements Serializable {
 		this.horasExtra = horasExtra;
 		this.feriados = feriados;
 		this.id_empleado = id_empleado;
+		this.horasTrabajadas = horasTrabajadas;
 	}
 
 	public String getId() {
@@ -70,17 +72,17 @@ public class Novedad implements Serializable {
 	public void setFeriados(int feriados) {
 		this.feriados = feriados;
 	}
-	public ObjectId getId_empleado() {
-		return id_empleado;
-	}
-	public void setId_empleado(ObjectId id_empleado) {
-		this.id_empleado = id_empleado;
-	}
 	public String getIdEmpleado() {
 		return id_empleado.toHexString();
 	}
 	public void setIdEmpleado(ObjectId _id) {
 		this.id_empleado = _id;
+	}
+	public int getHorasTrabajadas() {
+		return horasTrabajadas;
+	}
+	public void setHorasTrabajadas(int horasTrabajadas) {
+		this.horasTrabajadas = horasTrabajadas;
 	}
 	
 }
