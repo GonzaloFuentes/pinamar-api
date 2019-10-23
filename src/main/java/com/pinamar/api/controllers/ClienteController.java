@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.pinamar.api.exceptions.ClienteException;
 import com.pinamar.api.exceptions.EmpleadoException;
+import com.pinamar.api.exceptions.LiquidacionException;
 import com.pinamar.api.negocio.Cliente;
 import com.pinamar.api.negocio.Concepto;
 import com.pinamar.api.negocio.Empleado;
@@ -29,7 +30,9 @@ import com.pinamar.api.negocio.EmpleadoFijo;
 import com.pinamar.api.negocio.EmpleadoPorHora;
 import com.pinamar.api.negocio.EmpleadoView;
 import com.pinamar.api.negocio.Liquidacion;
+import com.pinamar.api.negocio.LiquidacionDTO;
 import com.pinamar.api.negocio.Novedad;
+import com.pinamar.api.negocio.Recibo;
 import com.pinamar.api.services.ClienteService;
 
 @RestController
@@ -133,7 +136,7 @@ public class ClienteController {
 	}
 	
 	@PostMapping("/sueldos")
-	public ResponseEntity<List<Liquidacion>> liquidarSueldos() {
+	public ResponseEntity<List<LiquidacionDTO>> liquidarSueldos() {
 		List<Cliente> clientes = clientesServ.getAllClientes();
 		List<Liquidacion> liqs = new ArrayList<Liquidacion>();
 		Date hoy = new Date();
@@ -171,7 +174,11 @@ public class ClienteController {
 			if(lDiaria != null)
 				liqs.add(lDiaria);
 		}
-		return ResponseEntity.ok(liqs);
+		List<LiquidacionDTO> aux = new ArrayList<LiquidacionDTO>();
+		for(Liquidacion liquid : liqs) {
+			aux.add(this.findLiquidacionById(liquid.getId()).getBody());
+		}
+		return ResponseEntity.ok(aux);
 	}
 	
 	@PostMapping("/empleados/{_id}/conceptos")
@@ -220,7 +227,23 @@ public class ClienteController {
 		}
 	}
 	
-	//crear endpoint get liquidacion por id y busque los recibos asi cumple la funcion que evalua
+	@GetMapping("liquidaciones/{_id}")
+	public ResponseEntity<LiquidacionDTO> findLiquidacionById(@PathVariable("_id") String _id) throws LiquidacionException{
+		Liquidacion liq = null;
+		LiquidacionDTO liquidacion = null;
+		List<Recibo> recibos = new ArrayList<Recibo>();
+		try {
+			liq = clientesServ.findLiquidacionById(_id);
+			for (ObjectId rec : liq.getRecibos()) {
+				recibos.add(clientesServ.findReciboById(rec.toHexString()));
+			}
+			liquidacion = new LiquidacionDTO(new ObjectId(liq.getId()), recibos, liq.getTipo(), liq.getFecha(), liq.getTotal());
+		}
+		catch (LiquidacionException ex) {
+			liquidacion = null;
+		}
+		return ResponseEntity.ok(liquidacion);
+	}
 	
 	@DeleteMapping("/{_id}")
 	public ResponseEntity<Void> deleteCliente(@PathVariable String _id){

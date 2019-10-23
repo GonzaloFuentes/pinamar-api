@@ -149,5 +149,19 @@ public class ClienteRepoImplementation implements ClienteRepositorio{
 	public void saveNovedad(Novedad n) {
 		this.mongoOp.save(n);
 	}
+
+	@Override
+	public Optional<Liquidacion> findLiquidacionById(String id) {
+		ObjectId _id = new ObjectId(id);
+		Liquidacion liq = this.mongoOp.findOne(new Query(Criteria.where("_id").is(_id)), Liquidacion.class);
+		return Optional.ofNullable(liq);
+	}
+
+	@Override
+	public Optional<Recibo> findReciboById(String id) {
+		ObjectId _id = new ObjectId(id);
+		Recibo r = this.mongoOp.findOne(new Query(Criteria.where("_id").is(_id)), Recibo.class);
+		return Optional.ofNullable(r);
+	}
 	
 }

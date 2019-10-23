@@ -34,4 +34,6 @@ public interface ClienteRepositorio{
 	public void updateEmpleadoFijo(EmpleadoFijo e);
 	public void updateEmpleadoHora(EmpleadoPorHora e);
 	public void saveNovedad(Novedad n);
+	Optional<Liquidacion> findLiquidacionById(String _id);
+	Optional<Recibo> findReciboById(String id);
 }

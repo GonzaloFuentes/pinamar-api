@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.pinamar.api.exceptions.ClienteException;
 import com.pinamar.api.exceptions.EmpleadoException;
+import com.pinamar.api.exceptions.LiquidacionException;
+import com.pinamar.api.exceptions.ReciboException;
 import com.pinamar.api.negocio.Cliente;
 import com.pinamar.api.negocio.Empleado;
 import com.pinamar.api.negocio.EmpleadoFijo;
@@ -260,6 +262,22 @@ public class ClienteServiceImplementation implements ClienteService{
 			return liq;
 		}
 		else return liq;
+	}
+
+	public Liquidacion findLiquidacionById(String _id) throws LiquidacionException{
+		Optional<Liquidacion> liq = clienteRepo.findLiquidacionById(_id);
+		if (liq.isPresent())
+			return liq.get();
+		else
+			throw new LiquidacionException("Liquidacion con id: " + _id + " no encontrada.");
+	}
+
+	public Recibo findReciboById(String id) throws ReciboException {
+		Optional<Recibo> r = clienteRepo.findReciboById(id);
+		if(r.isPresent())
+			return r.get();
+		else
+			throw new ReciboException("Recibo con el id: " + id + " no encontrado.");
 	}
 
 }

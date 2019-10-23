@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import com.pinamar.api.exceptions.ClienteException;
+import com.pinamar.api.exceptions.LiquidacionException;
 import com.pinamar.api.negocio.Cliente;
 import com.pinamar.api.negocio.Empleado;
 import com.pinamar.api.negocio.EmpleadoFijo;
@@ -36,5 +37,7 @@ public interface ClienteService {
 	public Liquidacion liquidacionQuincenal(List<EmpleadoFijo> empleadosFijos, List<EmpleadoPorHora> empleadosPorHora, Cliente c);
 	public Liquidacion liquidacionSemanal(List<EmpleadoFijo> empleadosFijos, List<EmpleadoPorHora> empleadosPorHora, Cliente c);
 	public Liquidacion liquidacionDiaria(List<EmpleadoFijo> empleadosFijos, List<EmpleadoPorHora> empleadosPorHora, Cliente c);
+	public Liquidacion findLiquidacionById(String _id) throws LiquidacionException;
+	public Recibo findReciboById(String hexString);
 
 }
