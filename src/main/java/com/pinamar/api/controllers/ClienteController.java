@@ -212,7 +212,7 @@ public class ClienteController {
 			clientesServ.updateEmpleadoHora(eh);
 			n.setIdEmpleado(new ObjectId(eh.getId()));
 			clientesServ.saveNovedad(n);
-			return ResponseEntity.ok(ef);
+			return ResponseEntity.ok(eh);
 		}
 	}
 	
