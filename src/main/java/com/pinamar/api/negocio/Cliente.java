@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @Document(collection = "clientes")
-@JsonPropertyOrder({"_id", "cuit", "nombre", "fisico", "empleados_id", "password", "liquidaciones"})
+@JsonPropertyOrder({"_id", "cuit", "nombre", "fisico", "empleados_id", "password", "liquidaciones", "diaMesLiquidacionMensual", "diaPrimerQuincena", "diaSegundaQuincena", "diaSemana"})
 public class Cliente implements Serializable{
 	
 	private static final long serialVersionUID = 6458521016596172276L;
@@ -23,18 +23,26 @@ public class Cliente implements Serializable{
 	private List<ObjectId> empleados_id;
 	private String password;
 	private List<ObjectId> liquidaciones;
-
-	public Cliente(ObjectId _id, String cuit, String nombre, boolean fisico, String password) {
+	private int diaMesLiquidacionMensual;
+	private int diaPrimerQuincena;
+	private int diaSegundaQuincena;
+	private String diaSemana;
+	
+	public Cliente(ObjectId _id, String cuit, String nombre, boolean fisico, String password,
+			int diaMesLiquidacionMensual, int diaPrimerQuincena, int diaSegundaQuincena, String diaSemana) {
 		super();
 		this._id = _id;
 		this.cuit = cuit;
 		this.nombre = nombre;
 		this.fisico = fisico;
 		this.password = password;
+		this.diaMesLiquidacionMensual = diaMesLiquidacionMensual;
+		this.diaPrimerQuincena = diaPrimerQuincena;
+		this.diaSegundaQuincena = diaSegundaQuincena;
+		this.diaSemana = diaSemana;
 		this.empleados_id = new ArrayList<ObjectId>();
 		this.liquidaciones = new ArrayList<ObjectId>();
 	}
-	
 	public String getId() {
 		return _id.toHexString();
 	}
@@ -88,6 +96,30 @@ public class Cliente implements Serializable{
 	}
 	public void removeLiquidacion(ObjectId _id) {
 		this.liquidaciones.remove(_id);
+	}
+	public int getDiaMesLiquidacionMensual() {
+		return diaMesLiquidacionMensual;
+	}
+	public void setDiaMesLiquidacionMensual(int diaMesLiquidacionMensual) {
+		this.diaMesLiquidacionMensual = diaMesLiquidacionMensual;
+	}
+	public int getDiaPrimerQuincena() {
+		return diaPrimerQuincena;
+	}
+	public void setDiaPrimerQuincena(int diaPrimerQuincena) {
+		this.diaPrimerQuincena = diaPrimerQuincena;
+	}
+	public int getDiaSegundaQuincena() {
+		return diaSegundaQuincena;
+	}
+	public void setDiaSegundaQuincena(int diaSegundaQuincena) {
+		this.diaSegundaQuincena = diaSegundaQuincena;
+	}
+	public String getDiaSemana() {
+		return diaSemana;
+	}
+	public void setDiaSemana(String diaSemana) {
+		this.diaSemana = diaSemana;
 	}
 	
 }
