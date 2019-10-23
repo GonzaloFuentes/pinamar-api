@@ -8,6 +8,8 @@ import com.pinamar.api.negocio.Empleado;
 import com.pinamar.api.negocio.EmpleadoFijo;
 import com.pinamar.api.negocio.EmpleadoPorHora;
 import com.pinamar.api.negocio.EmpleadoView;
+import com.pinamar.api.negocio.Liquidacion;
+import com.pinamar.api.negocio.Recibo;
 
 public interface ClienteRepositorio{
 	
@@ -24,4 +26,8 @@ public interface ClienteRepositorio{
 	public Empleado saveEmpleadoHora(EmpleadoPorHora empH);
 	public Optional<EmpleadoView> findEmpleadoById(String _id);
 	List<Empleado> getEmpleadosByCliente(Cliente c);
+	List<EmpleadoFijo> getEmpleadosFijoByClienteAndTipo(Cliente c, String tipo);
+	List<EmpleadoPorHora> getEmpleadosHoraByClienteAndTipo(Cliente c, String tipo);
+	public void saveRecibo(Recibo r);
+	public void saveLiquidacion(Liquidacion liq);
 }

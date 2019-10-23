@@ -83,18 +83,11 @@ public class Cliente implements Serializable{
 	public void setLiquidaciones(List<ObjectId> liquidaciones) {
 		this.liquidaciones = liquidaciones;
 	}
-	/*
-		 int liquidarSueldosMensuales(){
-		List<Empleado> lista = this.getEmpleadosMensuales()
-		Liquidacion l = new Liquidacion()
-		int totale = 0
-		Para cada empleado de la lista{
-			Recibo rec = empleado.liquidarSueldo()
-			l.addRecibo(rec)
-			totale ++
-		}
-		this.liquidaciones.add(l)
-		return totale
-		} 
-	 */
+	public void addLiquidacion(ObjectId _id) {
+		this.liquidaciones.add(_id);
+	}
+	public void removeLiquidacion(ObjectId _id) {
+		this.liquidaciones.remove(_id);
+	}
+	
 }

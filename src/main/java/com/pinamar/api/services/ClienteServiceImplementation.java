@@ -15,6 +15,8 @@ import com.pinamar.api.negocio.Empleado;
 import com.pinamar.api.negocio.EmpleadoFijo;
 import com.pinamar.api.negocio.EmpleadoPorHora;
 import com.pinamar.api.negocio.EmpleadoView;
+import com.pinamar.api.negocio.Liquidacion;
+import com.pinamar.api.negocio.Recibo;
 import com.pinamar.api.repositorios.ClienteRepositorio;
 
 @Service("clienteService")
@@ -82,6 +84,23 @@ public class ClienteServiceImplementation implements ClienteService{
 			EmpleadoPorHora empH = new EmpleadoPorHora(new ObjectId(), e.getDni(), e.getNombre(), e.getDireccion(), e.getPuesto(), e.getFechaIngreso(), e.getTipoLiquidacion(), valor, 0, e.getConceptos(), e.getCbu());
 			return clienteRepo.saveEmpleadoHora(empH);
 		}
+	}
+
+	public List<EmpleadoFijo> getEmpleadosFijoByClienteAndTipo(Cliente c, String tipo) {
+		return clienteRepo.getEmpleadosFijoByClienteAndTipo(c,tipo);
+	}
+
+	public List<EmpleadoPorHora> getEmpleadosHoraByClienteAndTipo(Cliente c, String tipo) {
+		return clienteRepo.getEmpleadosHoraByClienteAndTipo(c,tipo);
+	}
+
+	public void saveRecibo(Recibo r) {
+		clienteRepo.saveRecibo(r);
+		
+	}
+
+	public void saveLiquidacion(Liquidacion liq) {
+		clienteRepo.saveLiquidacion(liq);
 	}
 
 }

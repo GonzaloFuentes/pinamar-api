@@ -1,5 +1,7 @@
 package com.pinamar.api.controllers;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -23,6 +25,8 @@ import com.pinamar.api.negocio.Empleado;
 import com.pinamar.api.negocio.EmpleadoFijo;
 import com.pinamar.api.negocio.EmpleadoPorHora;
 import com.pinamar.api.negocio.EmpleadoView;
+import com.pinamar.api.negocio.Liquidacion;
+import com.pinamar.api.negocio.Recibo;
 import com.pinamar.api.services.ClienteService;
 
 @RestController
@@ -126,7 +130,44 @@ public class ClienteController {
 		return ResponseEntity.ok(aux);
 	}
 	
-	
+	@PostMapping("/sueldos/{tipo}")
+	public ResponseEntity<Liquidacion> liquidarSueldos(@PathVariable("tipo") String tipo){ //despues devuelve una liquidacion en vez de void
+		List<Cliente> clientes = clientesServ.getAllClientes();
+		Liquidacion liq = null;
+		for (Cliente c : clientes) {
+			List<EmpleadoFijo> empleadosFijos;
+			List<EmpleadoPorHora> empleadosPorHora;
+			empleadosFijos = clientesServ.getEmpleadosFijoByClienteAndTipo(c, tipo);
+			empleadosPorHora = clientesServ.getEmpleadosHoraByClienteAndTipo(c, tipo);
+			int cantidad = empleadosFijos.size() + empleadosPorHora.size();
+			List<ObjectId> rs = new ArrayList<ObjectId>();
+			List<Recibo> recibos = new ArrayList<Recibo>();
+			Recibo rec;
+			for (EmpleadoFijo e : empleadosFijos) {
+				rec = e.liquidarSueldo();
+				rs.add(new ObjectId(rec.getId()));
+				recibos.add(rec);
+			}
+			for (EmpleadoPorHora e : empleadosPorHora) {
+				rec = e.liquidarSueldo();
+				rs.add(new ObjectId(rec.getId()));
+				recibos.add(rec);
+			}
+			double total = 0;
+			for (Recibo r : recibos) {
+				total += r.getSueldoNeto();
+			}
+			liq = new Liquidacion(new ObjectId(), rs, tipo, new Date(), total);
+			c.addLiquidacion(new ObjectId(liq.getId()));
+			//facturar
+			//save de recibos, liquidaciones
+			for (Recibo r : recibos) {
+				clientesServ.saveRecibo(r);
+			}
+			clientesServ.saveLiquidacion(liq);
+		}
+		return ResponseEntity.ok(liq);
+	}
 	
 	@DeleteMapping("/{_id}")
 	public ResponseEntity<Void> deleteCliente(@PathVariable String _id){
