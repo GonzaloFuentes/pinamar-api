@@ -196,7 +196,6 @@ public class ClienteController {
 		EmpleadoPorHora eh = null;
 		if(ev.getTipo().equalsIgnoreCase("FIJO")) {
 			ef = new EmpleadoFijo(new ObjectId(ev.getId()), ev.getDni(), ev.getNombre(), ev.getDireccion(), ev.getPuesto(), ev.getFechaIngreso(), ev.getTipoLiquidacion(), ev.getSueldoBase(), ev.getDiasAusentes(), ev.getDiasEnfermedad(), ev.getDiasVacaciones(), ev.getHorasExtras(), ev.getFeriados(), ev.getDiasTrabajados(), ev.getConceptos(), ev.getCbu());
-			// "diasAusentes", "diasEnfermedad", "diasVacaciones", "horasExtra", "feriados"
 			ef.setDiasAusentes(n.getDiasAusentes());
 			ef.setDiasEnfermedad(n.getDiasEnfermedad());
 			ef.setDiasVacaciones(n.getDiasVacaciones());
