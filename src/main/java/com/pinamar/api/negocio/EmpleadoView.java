@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @Document(collection = "empleados")
-@JsonPropertyOrder({"_id", "dni", "nombre", "direccion", "puesto", "fechaIngreso", "tipo", "tipoLiquidacion", "valorHora", "horasTrabajadas", "sueldoBase", "horasExtras", "diasAusentes", "diasEnfermedad", "diasVacaciones", "feriados", "diasTrabajados", "conceptos", "cbu"})
+@JsonPropertyOrder({"_id", "dni", "nombre", "direccion", "puesto", "fechaIngreso", "tipo", "tipoLiquidacion", "valorHora", "horasTrabajadas", "sueldoBase", "horasExtras", "diasAusentes", "diasEnfermedad", "diasVacaciones", "feriados", "diasTrabajados", "conceptos", "cbu", "recibos"})
 public class EmpleadoView {
 
 	@Id
@@ -33,9 +33,10 @@ public class EmpleadoView {
 	private int diasTrabajados;
 	private List<Concepto> conceptos;
 	private String cbu;
+	private List<ObjectId> recibos;
 	
 	public EmpleadoView(ObjectId _id, int dni, String nombre, String direccion, String puesto,
-			Date fechaIngreso, String tipo, String tipoLiquidacion, double valorHora, int horasTrabajadas, double sueldoBase, int horasExtras, int diasAusentes, int diasEnfermedad, int diasVacaciones, int feriados, int diasTrabajados, List<Concepto> conceptos, String cbu) {
+			Date fechaIngreso, String tipo, String tipoLiquidacion, double valorHora, int horasTrabajadas, double sueldoBase, int horasExtras, int diasAusentes, int diasEnfermedad, int diasVacaciones, int feriados, int diasTrabajados, List<Concepto> conceptos, String cbu, List<ObjectId> recibos) {
 		super();
 		this._id = _id;
 		this.dni = dni;
@@ -56,6 +57,7 @@ public class EmpleadoView {
 		this.diasTrabajados = diasTrabajados;
 		this.conceptos = conceptos;
 		this.cbu = cbu;
+		this.recibos = recibos;
 	}
 
 	public String getId() {
@@ -177,5 +179,17 @@ public class EmpleadoView {
 	}
 	public void setCbu(String cbu) {
 		this.cbu = cbu;
+	}
+	public List<ObjectId> getRecibos() {
+		return recibos;
+	}
+	public void setRecibos(List<ObjectId> recibos) {
+		this.recibos = recibos;
+	}
+	public void addRecibo(ObjectId id) {
+		this.recibos.add(id);
+	}
+	public void removeRecibo(ObjectId id) {
+		this.recibos.remove(id);
 	}
 }

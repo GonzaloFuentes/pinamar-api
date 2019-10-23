@@ -126,6 +126,8 @@ public class ClienteController {
 		return ResponseEntity.ok(aux);
 	}
 	
+	
+	
 	@DeleteMapping("/{_id}")
 	public ResponseEntity<Void> deleteCliente(@PathVariable String _id){
 		clientesServ.deleteCliente(_id);

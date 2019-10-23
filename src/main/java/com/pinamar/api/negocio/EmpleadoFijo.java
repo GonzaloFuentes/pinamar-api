@@ -1,5 +1,6 @@
 package com.pinamar.api.negocio;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -69,7 +70,7 @@ public class EmpleadoFijo extends Empleado {
 		this.diasTrabajados = diasTrabajados;
 	}
 
-	public double calcularSueldoBruto () {
+	private double calcularSueldoBruto () {
 		int diasTotales;
 		int horasTotales;
 		if(this.getTipoLiquidacion().equalsIgnoreCase("MENSUAL")) {
@@ -93,31 +94,83 @@ public class EmpleadoFijo extends Empleado {
 			diasTotales = 15;
 			horasTotales = 80;
 			diasTrabajados = diasTotales - feriados - diasVacaciones - diasEnfermedad - diasAusentes;
+			double montoDiasNormales = (sueldoBase/diasTotales) * diasTrabajados;
+			double montoFeriados = (sueldoBase/diasTotales) * feriados * 2;
+			double montoVacaciones = (sueldoBase/13) * diasVacaciones;
+			double montoEnfermedad = (sueldoBase/diasTotales) * diasEnfermedad;
+			double montoAusentes = (sueldoBase/diasTotales) * diasAusentes;
+			double montoHorasExtra = (sueldoBase/horasTotales) * 1.5 * horasExtra;
+			double montoBonos = 0;
+			for (Concepto c : this.getConceptos())
+				if(c.getTipo().equalsIgnoreCase("BONIFICACION"))
+					montoBonos += (c.getValor()*sueldoBase); //siempre es un porcentaje
+			double sueldoBruto = montoDiasNormales + montoFeriados + montoVacaciones + montoEnfermedad - montoAusentes + montoHorasExtra + montoBonos;
+			return sueldoBruto;
 		}
 		else if (this.getTipoLiquidacion().equalsIgnoreCase("SEMANAL")) {
 			diasTotales = 7;
 			horasTotales = 40;
 			diasTrabajados = diasTotales - feriados - diasVacaciones - diasEnfermedad - diasAusentes;
+			double montoDiasNormales = (sueldoBase/diasTotales) * diasTrabajados;
+			double montoFeriados = (sueldoBase/diasTotales) * feriados * 2;
+			double montoVacaciones = (sueldoBase/6) * diasVacaciones;
+			double montoEnfermedad = (sueldoBase/diasTotales) * diasEnfermedad;
+			double montoAusentes = (sueldoBase/diasTotales) * diasAusentes;
+			double montoHorasExtra = (sueldoBase/horasTotales) * 1.5 * horasExtra;
+			double montoBonos = 0;
+			for (Concepto c : this.getConceptos())
+				if(c.getTipo().equalsIgnoreCase("BONIFICACION"))
+					montoBonos += (c.getValor()*sueldoBase); //siempre es un porcentaje
+			double sueldoBruto = montoDiasNormales + montoFeriados + montoVacaciones + montoEnfermedad - montoAusentes + montoHorasExtra + montoBonos;
+			return sueldoBruto;
 		}
 		else { //queda solo la opcion diaria
 			diasTotales = 1;
 			horasTotales = 8;
+			double sueldoBruto=0; //si esta ausente, no cobra.
+			if(diasAusentes != 1) {
+				if(diasEnfermedad == 1 || diasVacaciones == 1)
+					sueldoBruto += sueldoBase;
+				else if(feriados == 1)
+						sueldoBruto += sueldoBase * 2;
+				sueldoBruto += sueldoBase * 1.5 * horasExtra;
+			}
+			double montoBonos = 0;
+			for (Concepto c : this.getConceptos())
+				if(c.getTipo().equalsIgnoreCase("BONIFICACION"))
+					montoBonos += (c.getValor()*sueldoBase); //siempre es un porcentaje
+			sueldoBruto += montoBonos;
+			return sueldoBruto;
 		}
-		return this.sueldoBase;
 	}
 	
+	private double calcularSueldoNeto() {
+		double montoDeducciones = 0;
+		double sueldoBruto = this.calcularSueldoBruto();
+		for (Concepto c : this.getConceptos()) {
+			if(c.getTipo().equalsIgnoreCase("DEDUCCION")) {
+				montoDeducciones += (sueldoBruto * c.getValor());
+			}
+		}
+		double sueldoNeto = sueldoBruto - montoDeducciones;
+		return sueldoNeto;
+	}
 	
-	/*
-		 Recibo liquidarSueldo(){
-		Recibo r = new Recibo()
-		base = this.calcularSueldoBase()	// Hecho en el codigo
-		// CALCULO EN HOJA. VER SI SE PERSISTEN COMO CONCEPTOS O SE GUARDAN LOCAL
-		Para cada concepto, agregarlo a la lista de conceptos del recibo
-		Al obtener el bruto => r.setBruto
-		Al obtener el neto => r.setNeto
-		this.recibos.addRecibo(r)
-		return r
-}
-	 */
+	public Recibo liquidarSueldo() {
+		double sueldoBruto = this.calcularSueldoBruto();
+		double sueldoNeto = this.calcularSueldoNeto();
+		List<ConceptoRecibo> crs = new ArrayList<ConceptoRecibo>();
+		for(Concepto c : this.getConceptos()) {
+			ConceptoRecibo cr;
+			if(c.getTipo().equalsIgnoreCase("BONIFICACION"))
+				cr = new ConceptoRecibo(c.getNombre(), c.getValor(), sueldoBase*c.getValor());
+			else
+				cr = new ConceptoRecibo(c.getNombre(), c.getValor(), sueldoBruto*(-1)*c.getValor()); //si es deduccion resta
+			crs.add(cr);
+		}
+		Recibo r = new Recibo(new ObjectId(), crs, sueldoBruto, sueldoNeto);
+		this.addRecibo(new ObjectId(r.getId()));
+		return r;
+	}
 	
 }

@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @Document(collection = "clientes")
-@JsonPropertyOrder({"_id", "cuit", "nombre", "fisico", "empleados_id", "password"})
+@JsonPropertyOrder({"_id", "cuit", "nombre", "fisico", "empleados_id", "password", "liquidaciones"})
 public class Cliente implements Serializable{
 	
 	private static final long serialVersionUID = 6458521016596172276L;
@@ -83,5 +83,18 @@ public class Cliente implements Serializable{
 	public void setLiquidaciones(List<ObjectId> liquidaciones) {
 		this.liquidaciones = liquidaciones;
 	}
-	
+	/*
+		 int liquidarSueldosMensuales(){
+		List<Empleado> lista = this.getEmpleadosMensuales()
+		Liquidacion l = new Liquidacion()
+		int totale = 0
+		Para cada empleado de la lista{
+			Recibo rec = empleado.liquidarSueldo()
+			l.addRecibo(rec)
+			totale ++
+		}
+		this.liquidaciones.add(l)
+		return totale
+		} 
+	 */
 }

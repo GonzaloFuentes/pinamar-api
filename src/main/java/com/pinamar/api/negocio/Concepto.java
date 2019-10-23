@@ -9,7 +9,7 @@ public class Concepto{
 	public Concepto(String nombre, double valor, String tipo) {
 		super();
 		this.nombre = nombre;
-		this.valor = valor/100;
+		this.valor = valor;
 		this.tipo = tipo;
 	}
 
@@ -20,7 +20,7 @@ public class Concepto{
 		this.nombre = nombre;
 	}
 	public double getValor() {
-		return valor;
+		return valor/100;
 	}
 	public void setValor(double valor) {
 		this.valor = valor;

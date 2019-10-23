@@ -2,7 +2,6 @@ package com.pinamar.api.negocio;
 
 public class ConceptoRecibo {
 
-	//dentro de recibo, misma coleccion
 	private String nombre;
 	private double valor;
 	private double monto;
