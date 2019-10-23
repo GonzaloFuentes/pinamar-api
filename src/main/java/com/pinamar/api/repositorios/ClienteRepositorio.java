@@ -9,6 +9,7 @@ import com.pinamar.api.negocio.EmpleadoFijo;
 import com.pinamar.api.negocio.EmpleadoPorHora;
 import com.pinamar.api.negocio.EmpleadoView;
 import com.pinamar.api.negocio.Liquidacion;
+import com.pinamar.api.negocio.Novedad;
 import com.pinamar.api.negocio.Recibo;
 
 public interface ClienteRepositorio{
@@ -32,4 +33,5 @@ public interface ClienteRepositorio{
 	public void saveLiquidacion(Liquidacion liq);
 	public void updateEmpleadoFijo(EmpleadoFijo e);
 	public void updateEmpleadoHora(EmpleadoPorHora e);
+	public void saveNovedad(Novedad n);
 }

@@ -27,6 +27,7 @@ import com.pinamar.api.negocio.EmpleadoFijo;
 import com.pinamar.api.negocio.EmpleadoPorHora;
 import com.pinamar.api.negocio.EmpleadoView;
 import com.pinamar.api.negocio.Liquidacion;
+import com.pinamar.api.negocio.Novedad;
 import com.pinamar.api.negocio.Recibo;
 import com.pinamar.api.services.ClienteService;
 
@@ -146,13 +147,13 @@ public class ClienteController {
 			rec = e.liquidarSueldo();
 			rs.add(new ObjectId(rec.getId()));
 			recibos.add(rec);
-			clientesServ.updateEmpleadoFijo(e); //deberia actualizar al empleado y agregarle un item al array de recibos, nada mas. el add lo hace dentro del liquidar sueldo
+			clientesServ.updateEmpleadoFijo(e); //deberia actualizar al empleado y agregarle un item al array de recibos, nada mas. el add recibo lo hace dentro del liquidar sueldo
 		}
 		for (EmpleadoPorHora e : empleadosPorHora) {
 			rec = e.liquidarSueldo();
 			rs.add(new ObjectId(rec.getId()));
 			recibos.add(rec);
-			clientesServ.updateEmpleadoHora(e); //deberia actualizar al empleado y agregarle un item al array de recibos, nada mas. el add lo hace dentro del liquidar sueldo
+			clientesServ.updateEmpleadoHora(e); //deberia actualizar al empleado y agregarle un item al array de recibos, nada mas. el add recibo lo hace dentro del liquidar sueldo
 		}
 		double total = 0;
 		for (Recibo r : recibos) {
@@ -185,6 +186,27 @@ public class ClienteController {
 			clientesServ.updateEmpleadoHora(eh);
 			return ResponseEntity.ok(eh);
 		}
+	}
+	
+	@PostMapping("/empleados/{_id}/novedades")
+	public ResponseEntity<Empleado> addNovedad(@RequestBody @Valid Novedad n, @PathVariable("_id") String _id) {
+		//se devuelve el empleado para mostrar que las novedades se agregaron correctamente
+		EmpleadoView ev = clientesServ.findEmpleadoById(_id);
+		EmpleadoFijo ef = null;
+		if(ev.getTipo().equalsIgnoreCase("FIJO")) {
+			ef = new EmpleadoFijo(new ObjectId(ev.getId()), ev.getDni(), ev.getNombre(), ev.getDireccion(), ev.getPuesto(), ev.getFechaIngreso(), ev.getTipoLiquidacion(), ev.getSueldoBase(), ev.getDiasAusentes(), ev.getDiasEnfermedad(), ev.getDiasVacaciones(), ev.getHorasExtras(), ev.getFeriados(), ev.getDiasTrabajados(), ev.getConceptos(), ev.getCbu());
+			// "diasAusentes", "diasEnfermedad", "diasVacaciones", "horasExtra", "feriados"
+			ef.setDiasAusentes(n.getDiasAusentes());
+			ef.setDiasEnfermedad(n.getDiasEnfermedad());
+			ef.setDiasVacaciones(n.getDiasVacaciones());
+			ef.setHorasExtra(n.getHorasExtra());
+			ef.setFeriados(n.getFeriados());
+			clientesServ.updateEmpleadoFijo(ef);
+			n.setId_empleado(new ObjectId(ef.getId()));
+			clientesServ.saveNovedad(n);
+			return ResponseEntity.ok(ef);
+		}
+		return ResponseEntity.ok(ef); //no lo encontro o el empleado es POR HORA y este no tiene novedades
 	}
 	
 	//crear endpoint get liquidacion por id y busque los recibos asi cumple la funcion que evalua

@@ -3,6 +3,8 @@ package com.pinamar.api.services;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,7 @@ import com.pinamar.api.negocio.EmpleadoFijo;
 import com.pinamar.api.negocio.EmpleadoPorHora;
 import com.pinamar.api.negocio.EmpleadoView;
 import com.pinamar.api.negocio.Liquidacion;
+import com.pinamar.api.negocio.Novedad;
 import com.pinamar.api.negocio.Recibo;
 import com.pinamar.api.repositorios.ClienteRepositorio;
 
@@ -109,6 +112,11 @@ public class ClienteServiceImplementation implements ClienteService{
 
 	public void updateEmpleadoHora(EmpleadoPorHora e) {
 		clienteRepo.updateEmpleadoHora(e);
+	}
+
+	@Override
+	public void saveNovedad(Novedad n) {
+		clienteRepo.saveNovedad(n);
 	}
 
 }

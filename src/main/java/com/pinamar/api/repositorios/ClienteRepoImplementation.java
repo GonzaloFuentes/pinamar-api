@@ -17,6 +17,7 @@ import com.pinamar.api.negocio.EmpleadoFijo;
 import com.pinamar.api.negocio.EmpleadoPorHora;
 import com.pinamar.api.negocio.EmpleadoView;
 import com.pinamar.api.negocio.Liquidacion;
+import com.pinamar.api.negocio.Novedad;
 import com.pinamar.api.negocio.Recibo;
 
 @Repository
@@ -143,6 +144,10 @@ public class ClienteRepoImplementation implements ClienteRepositorio{
 	public void updateEmpleadoHora(EmpleadoPorHora e) {
 		EmpleadoView aux = new EmpleadoView(new ObjectId(e.getId()), e.getDni(), e.getNombre(), e.getDireccion(), e.getPuesto(), e.getFechaIngreso(), "POR HORA", e.getTipoLiquidacion(), e.getValorHora(), e.getHorasTrabajadas(), 0, 0, 0, 0, 0, 0, 0, e.getConceptos(), e.getCbu(), e.getRecibos());
 		this.mongoOp.save(aux);
+	}
+
+	public void saveNovedad(Novedad n) {
+		this.mongoOp.save(n);
 	}
 	
 }

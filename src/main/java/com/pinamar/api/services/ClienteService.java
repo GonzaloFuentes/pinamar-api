@@ -2,6 +2,8 @@ package com.pinamar.api.services;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import com.pinamar.api.exceptions.ClienteException;
 import com.pinamar.api.negocio.Cliente;
 import com.pinamar.api.negocio.Empleado;
@@ -9,6 +11,7 @@ import com.pinamar.api.negocio.EmpleadoFijo;
 import com.pinamar.api.negocio.EmpleadoPorHora;
 import com.pinamar.api.negocio.EmpleadoView;
 import com.pinamar.api.negocio.Liquidacion;
+import com.pinamar.api.negocio.Novedad;
 import com.pinamar.api.negocio.Recibo;
 
 public interface ClienteService {
@@ -28,5 +31,6 @@ public interface ClienteService {
 	public void saveLiquidacion(Liquidacion liq);
 	public void updateEmpleadoFijo(EmpleadoFijo e);
 	public void updateEmpleadoHora(EmpleadoPorHora e);
+	public void saveNovedad(@Valid Novedad n);
 
 }
