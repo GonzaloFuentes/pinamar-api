@@ -19,6 +19,7 @@ import com.pinamar.api.negocio.Empleado;
 import com.pinamar.api.negocio.EmpleadoFijo;
 import com.pinamar.api.negocio.EmpleadoPorHora;
 import com.pinamar.api.negocio.EmpleadoView;
+import com.pinamar.api.negocio.Factura;
 import com.pinamar.api.negocio.Liquidacion;
 import com.pinamar.api.negocio.Novedad;
 import com.pinamar.api.negocio.Recibo;
@@ -150,7 +151,9 @@ public class ClienteServiceImplementation implements ClienteService{
 			c.addLiquidacion(new ObjectId(liq.getId()));
 			clienteRepo.saveLiquidacion(liq);
 			clienteRepo.updateCliente(c); //deberia actualizar al cliente y agregarle un item al array de liquidaciones, nada mas
-			//facturar
+			
+			Factura f = new Factura(new ObjectId(), c.getId(), liq.getId(), new Date(), (recibos.size() * 200));
+			clienteRepo.saveFactura(f);
 			return liq;
 		}
 		else return liq;
@@ -186,7 +189,9 @@ public class ClienteServiceImplementation implements ClienteService{
 			c.addLiquidacion(new ObjectId(liq.getId()));
 			clienteRepo.saveLiquidacion(liq);
 			clienteRepo.updateCliente(c); //deberia actualizar al cliente y agregarle un item al array de liquidaciones, nada mas
-			//facturar
+			
+			Factura f = new Factura(new ObjectId(), c.getId(), liq.getId(), new Date(), (recibos.size() * 200));
+			clienteRepo.saveFactura(f);
 			return liq;
 		}
 		else return liq;
@@ -222,7 +227,9 @@ public class ClienteServiceImplementation implements ClienteService{
 			c.addLiquidacion(new ObjectId(liq.getId()));
 			clienteRepo.saveLiquidacion(liq);
 			clienteRepo.updateCliente(c); //deberia actualizar al cliente y agregarle un item al array de liquidaciones, nada mas
-			//facturar
+			
+			Factura f = new Factura(new ObjectId(), c.getId(), liq.getId(), new Date(), (recibos.size() * 200));
+			clienteRepo.saveFactura(f);
 			return liq;
 		}
 		else return liq;
@@ -258,7 +265,9 @@ public class ClienteServiceImplementation implements ClienteService{
 			c.addLiquidacion(new ObjectId(liq.getId()));
 			clienteRepo.saveLiquidacion(liq);
 			clienteRepo.updateCliente(c); //deberia actualizar al cliente y agregarle un item al array de liquidaciones, nada mas
-			//facturar
+			
+			Factura f = new Factura(new ObjectId(), c.getId(), liq.getId(), new Date(), (recibos.size() * 200));
+			clienteRepo.saveFactura(f);
 			return liq;
 		}
 		else return liq;

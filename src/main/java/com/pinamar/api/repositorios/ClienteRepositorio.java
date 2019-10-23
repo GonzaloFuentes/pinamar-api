@@ -8,6 +8,7 @@ import com.pinamar.api.negocio.Empleado;
 import com.pinamar.api.negocio.EmpleadoFijo;
 import com.pinamar.api.negocio.EmpleadoPorHora;
 import com.pinamar.api.negocio.EmpleadoView;
+import com.pinamar.api.negocio.Factura;
 import com.pinamar.api.negocio.Liquidacion;
 import com.pinamar.api.negocio.Novedad;
 import com.pinamar.api.negocio.Recibo;
@@ -36,4 +37,5 @@ public interface ClienteRepositorio{
 	public void saveNovedad(Novedad n);
 	Optional<Liquidacion> findLiquidacionById(String _id);
 	Optional<Recibo> findReciboById(String id);
+	public void saveFactura(Factura f);
 }

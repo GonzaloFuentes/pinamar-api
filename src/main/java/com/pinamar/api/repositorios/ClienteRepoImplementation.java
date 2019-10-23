@@ -16,6 +16,7 @@ import com.pinamar.api.negocio.Empleado;
 import com.pinamar.api.negocio.EmpleadoFijo;
 import com.pinamar.api.negocio.EmpleadoPorHora;
 import com.pinamar.api.negocio.EmpleadoView;
+import com.pinamar.api.negocio.Factura;
 import com.pinamar.api.negocio.Liquidacion;
 import com.pinamar.api.negocio.Novedad;
 import com.pinamar.api.negocio.Recibo;
@@ -150,18 +151,20 @@ public class ClienteRepoImplementation implements ClienteRepositorio{
 		this.mongoOp.save(n);
 	}
 
-	@Override
 	public Optional<Liquidacion> findLiquidacionById(String id) {
 		ObjectId _id = new ObjectId(id);
 		Liquidacion liq = this.mongoOp.findOne(new Query(Criteria.where("_id").is(_id)), Liquidacion.class);
 		return Optional.ofNullable(liq);
 	}
 
-	@Override
 	public Optional<Recibo> findReciboById(String id) {
 		ObjectId _id = new ObjectId(id);
 		Recibo r = this.mongoOp.findOne(new Query(Criteria.where("_id").is(_id)), Recibo.class);
 		return Optional.ofNullable(r);
+	}
+
+	public void saveFactura(Factura f) {
+		this.mongoOp.save(f);
 	}
 	
 }
