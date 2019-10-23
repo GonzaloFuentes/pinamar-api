@@ -1,9 +1,9 @@
 package com.pinamar.api.services;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-
-import javax.validation.Valid;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,12 +89,12 @@ public class ClienteServiceImplementation implements ClienteService{
 		}
 	}
 
-	public List<EmpleadoFijo> getEmpleadosFijoByClienteAndTipo(Cliente c, String tipo) {
-		return clienteRepo.getEmpleadosFijoByClienteAndTipo(c,tipo);
+	public List<EmpleadoFijo> getEmpleadosFijoByCliente(Cliente c) {
+		return clienteRepo.getEmpleadosFijoByCliente(c);
 	}
 
-	public List<EmpleadoPorHora> getEmpleadosHoraByClienteAndTipo(Cliente c, String tipo) {
-		return clienteRepo.getEmpleadosHoraByClienteAndTipo(c,tipo);
+	public List<EmpleadoPorHora> getEmpleadosHoraByCliente(Cliente c) {
+		return clienteRepo.getEmpleadosHoraByCliente(c);
 	}
 
 	public void saveRecibo(Recibo r) {
@@ -114,9 +114,152 @@ public class ClienteServiceImplementation implements ClienteService{
 		clienteRepo.updateEmpleadoHora(e);
 	}
 
-	@Override
 	public void saveNovedad(Novedad n) {
 		clienteRepo.saveNovedad(n);
+	}
+
+	public Liquidacion liquidacionMensual(List<EmpleadoFijo> empleadosFijos, List<EmpleadoPorHora> empleadosPorHora, Cliente c) {
+		Recibo rec;
+		List<Recibo> recibos = new ArrayList<Recibo>();
+		for (EmpleadoFijo e : empleadosFijos) {
+			if(e.getTipoLiquidacion().equalsIgnoreCase("MENSUAL")) {
+				rec = e.liquidarSueldo();
+				recibos.add(rec);
+				clienteRepo.updateEmpleadoFijo(e); //deberia actualizar al empleado y agregarle un item al array de recibos, nada mas. el add recibo lo hace dentro del liquidar sueldo
+			}
+		}
+		for (EmpleadoPorHora e : empleadosPorHora) {
+			if(e.getTipoLiquidacion().equalsIgnoreCase("MENSUAL")) {
+				rec = e.liquidarSueldo();
+				recibos.add(rec);
+				clienteRepo.updateEmpleadoHora(e); //deberia actualizar al empleado y agregarle un item al array de recibos, nada mas. el add recibo lo hace dentro del liquidar sueldo
+			}
+		}
+		List<ObjectId> rs = new ArrayList<ObjectId>();
+		double total = 0;
+		for (Recibo r : recibos) {
+			rs.add(new ObjectId(r.getId()));
+			total += r.getSueldoNeto();
+			clienteRepo.saveRecibo(r);
+		}
+		Liquidacion liq = null;
+		if(!recibos.isEmpty()) {
+			liq = new Liquidacion(new ObjectId(), rs, "MENSUAL", new Date(), total);
+			c.addLiquidacion(new ObjectId(liq.getId()));
+			clienteRepo.saveLiquidacion(liq);
+			clienteRepo.updateCliente(c); //deberia actualizar al cliente y agregarle un item al array de liquidaciones, nada mas
+			//facturar
+			return liq;
+		}
+		else return liq;
+	}
+
+	public Liquidacion liquidacionQuincenal(List<EmpleadoFijo> empleadosFijos, List<EmpleadoPorHora> empleadosPorHora, Cliente c) {
+		Recibo rec;
+		List<Recibo> recibos = new ArrayList<Recibo>();
+		for (EmpleadoFijo e : empleadosFijos) {
+			if(e.getTipoLiquidacion().equalsIgnoreCase("QUINCENAL")) {
+				rec = e.liquidarSueldo();
+				recibos.add(rec);
+				clienteRepo.updateEmpleadoFijo(e); //deberia actualizar al empleado y agregarle un item al array de recibos, nada mas. el add recibo lo hace dentro del liquidar sueldo
+			}
+		}
+		for (EmpleadoPorHora e : empleadosPorHora) {
+			if(e.getTipoLiquidacion().equalsIgnoreCase("QUINCENAL")) {
+				rec = e.liquidarSueldo();
+				recibos.add(rec);
+				clienteRepo.updateEmpleadoHora(e); //deberia actualizar al empleado y agregarle un item al array de recibos, nada mas. el add recibo lo hace dentro del liquidar sueldo
+			}
+		}
+		List<ObjectId> rs = new ArrayList<ObjectId>();
+		double total = 0;
+		for (Recibo r : recibos) {
+			rs.add(new ObjectId(r.getId()));
+			total += r.getSueldoNeto();
+			clienteRepo.saveRecibo(r);
+		}
+		Liquidacion liq = null;
+		if(!recibos.isEmpty()) {
+			liq = new Liquidacion(new ObjectId(), rs, "QUINCENAL", new Date(), total);
+			c.addLiquidacion(new ObjectId(liq.getId()));
+			clienteRepo.saveLiquidacion(liq);
+			clienteRepo.updateCliente(c); //deberia actualizar al cliente y agregarle un item al array de liquidaciones, nada mas
+			//facturar
+			return liq;
+		}
+		else return liq;
+	}
+
+	public Liquidacion liquidacionSemanal(List<EmpleadoFijo> empleadosFijos, List<EmpleadoPorHora> empleadosPorHora, Cliente c) {
+		Recibo rec;
+		List<Recibo> recibos = new ArrayList<Recibo>();
+		for (EmpleadoFijo e : empleadosFijos) {
+			if(e.getTipoLiquidacion().equalsIgnoreCase("SEMANAL")) {
+				rec = e.liquidarSueldo();
+				recibos.add(rec);
+				clienteRepo.updateEmpleadoFijo(e); //deberia actualizar al empleado y agregarle un item al array de recibos, nada mas. el add recibo lo hace dentro del liquidar sueldo
+			}
+		}
+		for (EmpleadoPorHora e : empleadosPorHora) {
+			if(e.getTipoLiquidacion().equalsIgnoreCase("SEMANAL")) {
+				rec = e.liquidarSueldo();
+				recibos.add(rec);
+				clienteRepo.updateEmpleadoHora(e); //deberia actualizar al empleado y agregarle un item al array de recibos, nada mas. el add recibo lo hace dentro del liquidar sueldo
+			}
+		}
+		List<ObjectId> rs = new ArrayList<ObjectId>();
+		double total = 0;
+		for (Recibo r : recibos) {
+			rs.add(new ObjectId(r.getId()));
+			total += r.getSueldoNeto();
+			clienteRepo.saveRecibo(r);
+		}
+		Liquidacion liq = null;
+		if(!recibos.isEmpty()) {
+			liq = new Liquidacion(new ObjectId(), rs, "SEMANAL", new Date(), total);
+			c.addLiquidacion(new ObjectId(liq.getId()));
+			clienteRepo.saveLiquidacion(liq);
+			clienteRepo.updateCliente(c); //deberia actualizar al cliente y agregarle un item al array de liquidaciones, nada mas
+			//facturar
+			return liq;
+		}
+		else return liq;
+	}
+
+	public Liquidacion liquidacionDiaria(List<EmpleadoFijo> empleadosFijos, List<EmpleadoPorHora> empleadosPorHora, Cliente c) {
+		Recibo rec;
+		List<Recibo> recibos = new ArrayList<Recibo>();
+		for (EmpleadoFijo e : empleadosFijos) {
+			if(e.getTipoLiquidacion().equalsIgnoreCase("DIARIA")) {
+				rec = e.liquidarSueldo();
+				recibos.add(rec);
+				clienteRepo.updateEmpleadoFijo(e); //deberia actualizar al empleado y agregarle un item al array de recibos, nada mas. el add recibo lo hace dentro del liquidar sueldo
+			}
+		}
+		for (EmpleadoPorHora e : empleadosPorHora) {
+			if(e.getTipoLiquidacion().equalsIgnoreCase("DIARIA")) {
+				rec = e.liquidarSueldo();
+				recibos.add(rec);
+				clienteRepo.updateEmpleadoHora(e); //deberia actualizar al empleado y agregarle un item al array de recibos, nada mas. el add recibo lo hace dentro del liquidar sueldo
+			}
+		}
+		List<ObjectId> rs = new ArrayList<ObjectId>();
+		double total = 0;
+		for (Recibo r : recibos) {
+			rs.add(new ObjectId(r.getId()));
+			total += r.getSueldoNeto();
+			clienteRepo.saveRecibo(r);
+		}
+		Liquidacion liq = null;
+		if(!recibos.isEmpty()) {
+			liq = new Liquidacion(new ObjectId(), rs, "DIARIA", new Date(), total);
+			c.addLiquidacion(new ObjectId(liq.getId()));
+			clienteRepo.saveLiquidacion(liq);
+			clienteRepo.updateCliente(c); //deberia actualizar al cliente y agregarle un item al array de liquidaciones, nada mas
+			//facturar
+			return liq;
+		}
+		else return liq;
 	}
 
 }

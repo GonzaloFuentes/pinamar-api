@@ -1,6 +1,8 @@
 package com.pinamar.api.controllers;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -28,7 +30,6 @@ import com.pinamar.api.negocio.EmpleadoPorHora;
 import com.pinamar.api.negocio.EmpleadoView;
 import com.pinamar.api.negocio.Liquidacion;
 import com.pinamar.api.negocio.Novedad;
-import com.pinamar.api.negocio.Recibo;
 import com.pinamar.api.services.ClienteService;
 
 @RestController
@@ -131,43 +132,46 @@ public class ClienteController {
 		return ResponseEntity.ok(aux);
 	}
 	
-	@PostMapping("/sueldos/{cuit}/{tipo}")
-	public ResponseEntity<Liquidacion> liquidarSueldos(@PathVariable("cuit") String cuit, @PathVariable("tipo") String tipo) {
-		c = clientesServ.findByCuit(cuit);
-		Liquidacion liq = null;
-		List<EmpleadoFijo> empleadosFijos;
-		List<EmpleadoPorHora> empleadosPorHora;
-		empleadosFijos = clientesServ.getEmpleadosFijoByClienteAndTipo(c, tipo);
-		empleadosPorHora = clientesServ.getEmpleadosHoraByClienteAndTipo(c, tipo);
-		//int cantidad = empleadosFijos.size() + empleadosPorHora.size();
-		List<ObjectId> rs = new ArrayList<ObjectId>();
-		List<Recibo> recibos = new ArrayList<Recibo>();
-		Recibo rec;
-		for (EmpleadoFijo e : empleadosFijos) {
-			rec = e.liquidarSueldo();
-			rs.add(new ObjectId(rec.getId()));
-			recibos.add(rec);
-			clientesServ.updateEmpleadoFijo(e); //deberia actualizar al empleado y agregarle un item al array de recibos, nada mas. el add recibo lo hace dentro del liquidar sueldo
+	@PostMapping("/sueldos")
+	public ResponseEntity<List<Liquidacion>> liquidarSueldos() {
+		List<Cliente> clientes = clientesServ.getAllClientes();
+		List<Liquidacion> liqs = new ArrayList<Liquidacion>();
+		Date hoy = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
+		String dia = sdf.format(hoy);
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(hoy);
+		int diaNumero = cal.get(Calendar.DAY_OF_MONTH);
+		for (Cliente c : clientes) {
+			List<EmpleadoFijo> empleadosFijos;
+			List<EmpleadoPorHora> empleadosPorHora;
+			empleadosFijos = clientesServ.getEmpleadosFijoByCliente(c);
+			empleadosPorHora = clientesServ.getEmpleadosHoraByCliente(c);
+			int diaMensual = c.getDiaMesLiquidacionMensual();
+			int diaPrimer = c.getDiaPrimerQuincena();
+			int diaSegundo = c.getDiaSegundaQuincena();
+			String diaSemana = c.getDiaSemana();
+			Liquidacion lMensual = null;
+			Liquidacion lQuincenal = null;
+			Liquidacion lSemanal = null;
+			Liquidacion lDiaria = null;
+			if(diaMensual == diaNumero)
+				lMensual = clientesServ.liquidacionMensual(empleadosFijos, empleadosPorHora, c);
+			if(diaSegundo == diaNumero || diaPrimer == diaNumero)
+				lQuincenal = clientesServ.liquidacionQuincenal(empleadosFijos, empleadosPorHora, c);
+			if(diaSemana.equalsIgnoreCase(dia))
+				lSemanal = clientesServ.liquidacionSemanal(empleadosFijos, empleadosPorHora, c);
+			lDiaria = clientesServ.liquidacionDiaria(empleadosFijos, empleadosPorHora, c);
+			if(lMensual != null)
+				liqs.add(lMensual);
+			if(lQuincenal != null)
+				liqs.add(lQuincenal);
+			if(lSemanal != null)
+				liqs.add(lSemanal);
+			if(lDiaria != null)
+				liqs.add(lDiaria);
 		}
-		for (EmpleadoPorHora e : empleadosPorHora) {
-			rec = e.liquidarSueldo();
-			rs.add(new ObjectId(rec.getId()));
-			recibos.add(rec);
-			clientesServ.updateEmpleadoHora(e); //deberia actualizar al empleado y agregarle un item al array de recibos, nada mas. el add recibo lo hace dentro del liquidar sueldo
-		}
-		double total = 0;
-		for (Recibo r : recibos) {
-			total += r.getSueldoNeto();
-		}
-		liq = new Liquidacion(new ObjectId(), rs, tipo, new Date(), total);
-		c.addLiquidacion(new ObjectId(liq.getId()));
-		//facturar
-		for (Recibo r : recibos) {
-			clientesServ.saveRecibo(r);
-		}
-		clientesServ.saveLiquidacion(liq);
-		clientesServ.updateCliente(c); //deberia actualizar al cliente y agregarle un item al array de liquidaciones, nada mas
-		return ResponseEntity.ok(liq);
+		return ResponseEntity.ok(liqs);
 	}
 	
 	@PostMapping("/empleados/{_id}/conceptos")

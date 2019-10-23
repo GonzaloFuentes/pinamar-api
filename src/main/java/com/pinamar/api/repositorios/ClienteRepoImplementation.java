@@ -97,14 +97,14 @@ public class ClienteRepoImplementation implements ClienteRepositorio{
 	}
 
 	@Override
-	public List<EmpleadoFijo> getEmpleadosFijoByClienteAndTipo(Cliente c, String tipo) {
+	public List<EmpleadoFijo> getEmpleadosFijoByCliente(Cliente c) {
 		List<ObjectId> empIds = c.getEmpleados_id();
 		List<EmpleadoFijo> empleados = new ArrayList<EmpleadoFijo>();
 		for (ObjectId id : empIds) {
 			Optional<EmpleadoView> evo = this.findEmpleadoById(id.toHexString());
 			EmpleadoView ev = evo.get();
 			EmpleadoFijo ef;
-			if(ev.getTipoLiquidacion().equalsIgnoreCase(tipo) && ev.getTipo().equalsIgnoreCase("FIJO")) {
+			if(ev.getTipo().equalsIgnoreCase("FIJO")) {
 				ef = new EmpleadoFijo(new ObjectId(ev.getId()), ev.getDni(), ev.getNombre(), ev.getDireccion(), ev.getPuesto(), ev.getFechaIngreso(), ev.getTipoLiquidacion(), ev.getSueldoBase(), ev.getDiasAusentes(), ev.getDiasEnfermedad(), ev.getDiasVacaciones(), ev.getHorasExtras(), ev.getFeriados(), ev.getDiasTrabajados(), ev.getConceptos(), ev.getCbu());
 				empleados.add(ef);
 			}
@@ -113,14 +113,14 @@ public class ClienteRepoImplementation implements ClienteRepositorio{
 	}
 
 	@Override
-	public List<EmpleadoPorHora> getEmpleadosHoraByClienteAndTipo(Cliente c, String tipo) {
+	public List<EmpleadoPorHora> getEmpleadosHoraByCliente(Cliente c) {
 		List<ObjectId> empIds = c.getEmpleados_id();
 		List<EmpleadoPorHora> empleados = new ArrayList<EmpleadoPorHora>();
 		for (ObjectId id : empIds) {
 			Optional<EmpleadoView> evo = this.findEmpleadoById(id.toHexString());
 			EmpleadoView ev = evo.get();
 			EmpleadoPorHora eh;
-			if(ev.getTipoLiquidacion().equalsIgnoreCase(tipo) && ev.getTipo().equalsIgnoreCase("POR HORA")) {
+			if(ev.getTipo().equalsIgnoreCase("POR HORA")) {
 				eh = new EmpleadoPorHora(new ObjectId(ev.getId()), ev.getDni(), ev.getNombre(), ev.getDireccion(), ev.getPuesto(), ev.getFechaIngreso(), ev.getTipoLiquidacion(), ev.getValorHora(), ev.getHorasTrabajadas(), ev.getConceptos(), ev.getCbu());
 				empleados.add(eh);
 			}

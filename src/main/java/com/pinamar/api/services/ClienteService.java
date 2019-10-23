@@ -25,12 +25,16 @@ public interface ClienteService {
 	public Empleado saveEmpleado(Empleado e, String tipo, double valor);
 	public EmpleadoView findEmpleadoById(String _id);
 	public List<Empleado> getEmpleadosByCliente(Cliente c);
-	List<EmpleadoFijo> getEmpleadosFijoByClienteAndTipo(Cliente c, String tipo);
-	List<EmpleadoPorHora> getEmpleadosHoraByClienteAndTipo(Cliente c, String tipo);
+	List<EmpleadoFijo> getEmpleadosFijoByCliente(Cliente c);
+	List<EmpleadoPorHora> getEmpleadosHoraByCliente(Cliente c);
 	public void saveRecibo(Recibo r);
 	public void saveLiquidacion(Liquidacion liq);
 	public void updateEmpleadoFijo(EmpleadoFijo e);
 	public void updateEmpleadoHora(EmpleadoPorHora e);
 	public void saveNovedad(@Valid Novedad n);
+	public Liquidacion liquidacionMensual(List<EmpleadoFijo> empleadosFijos, List<EmpleadoPorHora> empleadosPorHora, Cliente c);
+	public Liquidacion liquidacionQuincenal(List<EmpleadoFijo> empleadosFijos, List<EmpleadoPorHora> empleadosPorHora, Cliente c);
+	public Liquidacion liquidacionSemanal(List<EmpleadoFijo> empleadosFijos, List<EmpleadoPorHora> empleadosPorHora, Cliente c);
+	public Liquidacion liquidacionDiaria(List<EmpleadoFijo> empleadosFijos, List<EmpleadoPorHora> empleadosPorHora, Cliente c);
 
 }

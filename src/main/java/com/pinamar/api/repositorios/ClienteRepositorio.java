@@ -27,8 +27,8 @@ public interface ClienteRepositorio{
 	public Empleado saveEmpleadoHora(EmpleadoPorHora empH);
 	public Optional<EmpleadoView> findEmpleadoById(String _id);
 	List<Empleado> getEmpleadosByCliente(Cliente c);
-	List<EmpleadoFijo> getEmpleadosFijoByClienteAndTipo(Cliente c, String tipo);
-	List<EmpleadoPorHora> getEmpleadosHoraByClienteAndTipo(Cliente c, String tipo);
+	List<EmpleadoFijo> getEmpleadosFijoByCliente(Cliente c);
+	List<EmpleadoPorHora> getEmpleadosHoraByCliente(Cliente c);
 	public void saveRecibo(Recibo r);
 	public void saveLiquidacion(Liquidacion liq);
 	public void updateEmpleadoFijo(EmpleadoFijo e);
