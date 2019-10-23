@@ -163,8 +163,9 @@ public class ClienteController {
 				lMensual = clientesServ.liquidacionMensual(empleadosFijos, empleadosPorHora, c);
 			if(diaSegundo == diaNumero || diaPrimer == diaNumero)
 				lQuincenal = clientesServ.liquidacionQuincenal(empleadosFijos, empleadosPorHora, c);
-			if(diaSemana.equalsIgnoreCase(dia))
-				lSemanal = clientesServ.liquidacionSemanal(empleadosFijos, empleadosPorHora, c);
+			if(diaSemana != null)
+				if(diaSemana.equalsIgnoreCase(dia))
+					lSemanal = clientesServ.liquidacionSemanal(empleadosFijos, empleadosPorHora, c);
 			lDiaria = clientesServ.liquidacionDiaria(empleadosFijos, empleadosPorHora, c);
 			if(lMensual != null)
 				liqs.add(lMensual);
