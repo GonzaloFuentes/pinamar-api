@@ -166,5 +166,15 @@ public class ClienteRepoImplementation implements ClienteRepositorio{
 	public void saveFactura(Factura f) {
 		this.mongoOp.save(f);
 	}
+
+	public String findNombreEmpleadoRecibo(String id) {
+		return null;
+	}
+
+	@Override
+	public Optional<List<Factura>> findFacturasByCliente(String id) {
+		List<Factura> facturas = this.mongoOp.find(new Query(Criteria.where("id_cliente").is(id)), Factura.class);
+		return Optional.ofNullable(facturas);
+	}
 	
 }

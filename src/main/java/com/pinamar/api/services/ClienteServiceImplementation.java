@@ -289,4 +289,13 @@ public class ClienteServiceImplementation implements ClienteService{
 			throw new ReciboException("Recibo con el id: " + id + " no encontrado.");
 	}
 
+	public String findNombreEmpleadoRecibo(String id) {
+		return clienteRepo.findNombreEmpleadoRecibo(id);
+	}
+
+	public List<Factura> findFacturasByCliente(String id) {
+		Optional<List<Factura>> facturas = clienteRepo.findFacturasByCliente(id);
+		return facturas.get();
+	}
+
 }

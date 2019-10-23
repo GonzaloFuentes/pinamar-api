@@ -11,6 +11,7 @@ import com.pinamar.api.negocio.Empleado;
 import com.pinamar.api.negocio.EmpleadoFijo;
 import com.pinamar.api.negocio.EmpleadoPorHora;
 import com.pinamar.api.negocio.EmpleadoView;
+import com.pinamar.api.negocio.Factura;
 import com.pinamar.api.negocio.Liquidacion;
 import com.pinamar.api.negocio.Novedad;
 import com.pinamar.api.negocio.Recibo;
@@ -39,5 +40,7 @@ public interface ClienteService {
 	public Liquidacion liquidacionDiaria(List<EmpleadoFijo> empleadosFijos, List<EmpleadoPorHora> empleadosPorHora, Cliente c);
 	public Liquidacion findLiquidacionById(String _id) throws LiquidacionException;
 	public Recibo findReciboById(String hexString);
+	String findNombreEmpleadoRecibo(String id);
+	List<Factura> findFacturasByCliente(String id);
 
 }

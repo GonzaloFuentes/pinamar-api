@@ -38,4 +38,6 @@ public interface ClienteRepositorio{
 	Optional<Liquidacion> findLiquidacionById(String _id);
 	Optional<Recibo> findReciboById(String id);
 	public void saveFactura(Factura f);
+	String findNombreEmpleadoRecibo(String id);
+	Optional <List<Factura>> findFacturasByCliente(String id);
 }

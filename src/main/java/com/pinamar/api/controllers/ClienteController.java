@@ -29,6 +29,7 @@ import com.pinamar.api.negocio.Empleado;
 import com.pinamar.api.negocio.EmpleadoFijo;
 import com.pinamar.api.negocio.EmpleadoPorHora;
 import com.pinamar.api.negocio.EmpleadoView;
+import com.pinamar.api.negocio.Factura;
 import com.pinamar.api.negocio.Liquidacion;
 import com.pinamar.api.negocio.LiquidacionDTO;
 import com.pinamar.api.negocio.Novedad;
@@ -228,7 +229,7 @@ public class ClienteController {
 	}
 	
 	@GetMapping("liquidaciones/{_id}")
-	public ResponseEntity<LiquidacionDTO> findLiquidacionById(@PathVariable("_id") String _id) throws LiquidacionException{
+	public ResponseEntity<LiquidacionDTO> findLiquidacionById(@PathVariable("_id") String _id) throws LiquidacionException {
 		Liquidacion liq = null;
 		LiquidacionDTO liquidacion = null;
 		List<Recibo> recibos = new ArrayList<Recibo>();
@@ -243,6 +244,17 @@ public class ClienteController {
 			liquidacion = null;
 		}
 		return ResponseEntity.ok(liquidacion);
+	}
+	
+	@GetMapping("/empleados/{id_empleado}/recibos/{id_recibo}")
+	public ResponseEntity<String> getNombreEmpleadoRecibo(@PathVariable("id") String id){
+		return ResponseEntity.ok(clientesServ.findNombreEmpleadoRecibo(id));
+	}
+	
+	@GetMapping("/facturas/{cuit}")
+	public ResponseEntity<List<Factura>> findFacturasByCliente(@PathVariable("cuit") String cuit){
+		Cliente c = clientesServ.findByCuit(cuit);
+		return ResponseEntity.ok(clientesServ.findFacturasByCliente(c.getId()));
 	}
 	
 	@DeleteMapping("/{_id}")
