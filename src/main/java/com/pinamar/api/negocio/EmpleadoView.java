@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @Document(collection = "empleados")
-@JsonPropertyOrder({"_id", "dni", "cuit", "nombre", "direccion", "puesto", "fechaIngreso", "tipo", "tipoLiquidacion", "valorHora", "horasTrabajadas", "sueldoBase", "horasExtras", "diasAusentes", "diasEnfermedad", "diasVacaciones", "feriados", "diasTrabajados", "conceptos", "cbu", "recibos", "ultimaLiquidacion"})
+@JsonPropertyOrder({"_id", "dni", "cuit", "nombre", "direccion", "puesto", "fechaIngreso", "tipo", "tipoLiquidacion", "valorHora", "horasTrabajadas", "sueldoBase", "horasExtras", "diasAusentes", "diasEnfermedad", "diasVacaciones", "feriados", "diasTrabajados", "conceptos", "cbu", "recibos", "ultimaLiquidacion", "diasContratados"})
 public class EmpleadoView {
 
 	@Id
@@ -36,10 +36,11 @@ public class EmpleadoView {
 	private String cbu;
 	private List<ObjectId> recibos;
 	private Date ultimaLiquidacion;
+	private int diasContratados;
 	
 	public EmpleadoView(ObjectId _id, int dni, String cuit, String nombre, String direccion, String puesto,
 			Date fechaIngreso, String tipo, String tipoLiquidacion, double valorHora, int horasTrabajadas, double sueldoBase, int horasExtras, int diasAusentes, 
-			int diasEnfermedad, int diasVacaciones, int feriados, int diasTrabajados, List<Concepto> conceptos, String cbu, List<ObjectId> recibos, Date ultimaLiquidacion) {
+			int diasEnfermedad, int diasVacaciones, int feriados, int diasTrabajados, List<Concepto> conceptos, String cbu, List<ObjectId> recibos, Date ultimaLiquidacion, int diasContratados) {
 		super();
 		this._id = _id;
 		this.dni = dni;
@@ -63,6 +64,7 @@ public class EmpleadoView {
 		this.cbu = cbu;
 		this.recibos = recibos;
 		this.ultimaLiquidacion = ultimaLiquidacion;
+		this.diasContratados = diasContratados;
 	}
 
 	public String getId() {
@@ -208,6 +210,12 @@ public class EmpleadoView {
 	}
 	public void setUltimaLiquidacion(Date ultimaLiquidacion) {
 		this.ultimaLiquidacion = ultimaLiquidacion;
+	}
+	public int getDiasContratados() {
+		return diasContratados;
+	}
+	public void setDiasContratados(int diasContratados) {
+		this.diasContratados = diasContratados;
 	}
 	
 }

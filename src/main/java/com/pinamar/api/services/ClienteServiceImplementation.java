@@ -81,10 +81,10 @@ public class ClienteServiceImplementation implements ClienteService{
 			throw new EmpleadoException("Empleado con el id: " + _id + " no encontrado.");
 	}
 
-	public Empleado saveEmpleado(Empleado e, String tipo, double valor) {
+	public Empleado saveEmpleado(Empleado e, String tipo, double valor, int diasContratados) {
 		if(tipo.equalsIgnoreCase("FIJO")) {
 			EmpleadoFijo empF = new EmpleadoFijo(new ObjectId(), e.getDni(), e.getCuit(), e.getNombre(), e.getDireccion(), e.getPuesto(), e.getFechaIngreso(), 
-					e.getTipoLiquidacion(), valor, 0, 0, 0, 0, 0, 0, e.getConceptos(), e.getCbu(), new ArrayList<ObjectId>(), null);
+					e.getTipoLiquidacion(), valor, 0, 0, 0, 0, 0, 0, e.getConceptos(), e.getCbu(), new ArrayList<ObjectId>(), null, diasContratados);
 			return clienteRepo.saveEmpleadoFijo(empF);
 		}
 		else { //Si no es es fijo, es por hora

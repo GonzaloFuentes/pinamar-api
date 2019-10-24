@@ -84,7 +84,7 @@ public class ClienteController {
 				empF = new EmpleadoFijo(new ObjectId(empV.getId()), empV.getDni(), empV.getCuit(), empV.getNombre(), empV.getDireccion(), empV.getPuesto(), 
 						empV.getFechaIngreso(), empV.getTipoLiquidacion(), empV.getSueldoBase(), empV.getDiasAusentes(), empV.getDiasEnfermedad(), 
 						empV.getDiasVacaciones(), empV.getHorasExtras(), empV.getFeriados(), empV.getDiasTrabajados(), empV.getConceptos(), empV.getCbu(), 
-						empV.getRecibos(), empV.getUltimaLiquidacion());
+						empV.getRecibos(), empV.getUltimaLiquidacion(), empV.getDiasContratados());
 			else
 				empH = new EmpleadoPorHora(new ObjectId(empV.getId()), empV.getDni(), empV.getCuit(), empV.getNombre(), empV.getDireccion(), empV.getPuesto(), 
 						empV.getFechaIngreso(), empV.getTipoLiquidacion(), empV.getValorHora(), empV.getHorasTrabajadas(), empV.getConceptos(), empV.getCbu(), 
@@ -133,12 +133,12 @@ public class ClienteController {
 		return ResponseEntity.ok(clientesServ.saveCliente(aux)); //el metodo en el repo del save y update hacen lo mismo -> un save
 	}
 	
-	@PostMapping("/empleados/{tipo}/{valor}/{cuit}")
-	public ResponseEntity<Empleado> saveEmpleado(@RequestBody @Valid Empleado e, @PathVariable("tipo") String tipo, @PathVariable("valor") double valor, @PathVariable("cuit") String cuit) {
+	@PostMapping("/empleados/{tipo}/{valor}/{cuit}/{diasContratados}")
+	public ResponseEntity<Empleado> saveEmpleado(@RequestBody @Valid Empleado e, @PathVariable("tipo") String tipo, @PathVariable("valor") double valor, @PathVariable("cuit") String cuit, @PathVariable("diasContratados") int diasContratados) {
 		Cliente c = clientesServ.findByCuit(cuit);
-		Empleado aux = clientesServ.saveEmpleado(e, tipo, valor);
+		Empleado aux = clientesServ.saveEmpleado(e, tipo, valor, diasContratados);
 		c.addEmpleado(new ObjectId(aux.getId()));
-		clientesServ.saveCliente(c);
+		clientesServ.updateCliente(c);
 		return ResponseEntity.ok(aux);
 	}
 	
@@ -244,7 +244,7 @@ public class ClienteController {
 		if(ev.getTipo().equalsIgnoreCase("FIJO")) {
 			ef = new EmpleadoFijo(new ObjectId(ev.getId()), ev.getDni(), ev.getCuit(), ev.getNombre(), ev.getDireccion(), ev.getPuesto(), 
 					ev.getFechaIngreso(), ev.getTipoLiquidacion(), ev.getSueldoBase(), ev.getDiasAusentes(), ev.getDiasEnfermedad(), ev.getDiasVacaciones(), 
-					ev.getHorasExtras(), ev.getFeriados(), ev.getDiasTrabajados(), ev.getConceptos(), ev.getCbu(), ev.getRecibos(), ev.getUltimaLiquidacion());
+					ev.getHorasExtras(), ev.getFeriados(), ev.getDiasTrabajados(), ev.getConceptos(), ev.getCbu(), ev.getRecibos(), ev.getUltimaLiquidacion(), ev.getDiasContratados());
 			ef.addConcepto(c);
 			clientesServ.updateEmpleadoFijo(ef);
 			return ResponseEntity.ok(ef);
@@ -266,7 +266,7 @@ public class ClienteController {
 		if(ev.getTipo().equalsIgnoreCase("FIJO")) {
 			ef = new EmpleadoFijo(new ObjectId(ev.getId()), ev.getDni(), ev.getCuit(), ev.getNombre(), ev.getDireccion(), ev.getPuesto(), ev.getFechaIngreso(), 
 					ev.getTipoLiquidacion(), ev.getSueldoBase(), ev.getDiasAusentes(), ev.getDiasEnfermedad(), ev.getDiasVacaciones(), ev.getHorasExtras(), 
-					ev.getFeriados(), ev.getDiasTrabajados(), ev.getConceptos(), ev.getCbu(), ev.getRecibos(), ev.getUltimaLiquidacion());
+					ev.getFeriados(), ev.getDiasTrabajados(), ev.getConceptos(), ev.getCbu(), ev.getRecibos(), ev.getUltimaLiquidacion(), ev.getDiasContratados());
 			ef.setDiasAusentes(n.getDiasAusentes());
 			ef.setDiasEnfermedad(n.getDiasEnfermedad());
 			ef.setDiasVacaciones(n.getDiasVacaciones());

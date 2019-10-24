@@ -16,9 +16,10 @@ public class EmpleadoFijo extends Empleado {
 	private int horasExtra; //sueldo sobre 160 horas por hora extra por 50% de la hora
 	private int feriados; //sueldo base / 30 * 2 * dia
 	private int diasTrabajados; //ademas de para hacer la cuenta, se quiere guardar
+	private int diasContratados;
 	
 	public EmpleadoFijo(ObjectId _id, int dni, String cuit, String nombre, String direccion, String puesto, Date fechaIngreso, String tipoLiquidacion, double sueldoBase, 
-			int diasAusentes, int diasEnfermedad, int diasVacaciones, int horasExtra, int feriados, int diasTrabajados, List<Concepto> conceptos, String cbu, List<ObjectId> recibos, Date ultimaLiquidacion) {
+			int diasAusentes, int diasEnfermedad, int diasVacaciones, int horasExtra, int feriados, int diasTrabajados, List<Concepto> conceptos, String cbu, List<ObjectId> recibos, Date ultimaLiquidacion, int diasContratados) {
 		super(_id, dni, cuit, nombre, direccion, puesto, fechaIngreso, tipoLiquidacion, conceptos, cbu, recibos, ultimaLiquidacion);
 		this.sueldoBase = sueldoBase;
 		this.diasAusentes = diasAusentes;
@@ -27,6 +28,7 @@ public class EmpleadoFijo extends Empleado {
 		this.horasExtra = horasExtra;
 		this.feriados = feriados;
 		this.diasTrabajados = diasTrabajados;
+		this.diasContratados = diasContratados;
 	}
 
 	public double getSueldoBase() {
@@ -71,19 +73,23 @@ public class EmpleadoFijo extends Empleado {
 	public void setDiasTrabajados(int diasTrabajados) {
 		this.diasTrabajados = diasTrabajados;
 	}
+	public int getDiasContratados() {
+		return diasContratados;
+	}
+	public void setDiasContratados(int diasContratados) {
+		this.diasContratados = diasContratados;
+	}
 
 	private double calcularSueldoBruto () {
-		int diasTotales;
-		int horasTotales;
+		int horasTotales = diasContratados * 8;
 		if(this.getTipoLiquidacion().equalsIgnoreCase("MENSUAL")) {
-			diasTotales = 30;
-			horasTotales = 160;
-			diasTrabajados = diasTotales - feriados - diasVacaciones - diasEnfermedad - diasAusentes;
-			double montoDiasNormales = (sueldoBase/diasTotales) * diasTrabajados;
-			double montoFeriados = (sueldoBase/diasTotales) * feriados * 2;
+			horasTotales = diasContratados * 8;
+			diasTrabajados = diasContratados - feriados - diasVacaciones - diasEnfermedad - diasAusentes;
+			double montoDiasNormales = (sueldoBase/diasContratados) * diasTrabajados;
+			double montoFeriados = (sueldoBase/diasContratados) * feriados * 2;
 			double montoVacaciones = (sueldoBase/25) * diasVacaciones;
-			double montoEnfermedad = (sueldoBase/diasTotales) * diasEnfermedad;
-			double montoAusentes = (sueldoBase/diasTotales) * diasAusentes;
+			double montoEnfermedad = (sueldoBase/diasContratados) * diasEnfermedad;
+			double montoAusentes = (sueldoBase/diasContratados) * diasAusentes;
 			double montoHorasExtra = (sueldoBase/horasTotales) * 1.5 * horasExtra;
 			double montoBonos = 0;
 			for (Concepto c : this.getConceptos())
@@ -93,14 +99,12 @@ public class EmpleadoFijo extends Empleado {
 			return sueldoBruto;
 		}
 		else if (this.getTipoLiquidacion().equalsIgnoreCase("QUINCENAL")) {
-			diasTotales = 15;
-			horasTotales = 80;
-			diasTrabajados = diasTotales - feriados - diasVacaciones - diasEnfermedad - diasAusentes;
-			double montoDiasNormales = (sueldoBase/diasTotales) * diasTrabajados;
-			double montoFeriados = (sueldoBase/diasTotales) * feriados * 2;
+			diasTrabajados = diasContratados - feriados - diasVacaciones - diasEnfermedad - diasAusentes;
+			double montoDiasNormales = (sueldoBase/diasContratados) * diasTrabajados;
+			double montoFeriados = (sueldoBase/diasContratados) * feriados * 2;
 			double montoVacaciones = (sueldoBase/13) * diasVacaciones;
-			double montoEnfermedad = (sueldoBase/diasTotales) * diasEnfermedad;
-			double montoAusentes = (sueldoBase/diasTotales) * diasAusentes;
+			double montoEnfermedad = (sueldoBase/diasContratados) * diasEnfermedad;
+			double montoAusentes = (sueldoBase/diasContratados) * diasAusentes;
 			double montoHorasExtra = (sueldoBase/horasTotales) * 1.5 * horasExtra;
 			double montoBonos = 0;
 			for (Concepto c : this.getConceptos())
@@ -110,14 +114,12 @@ public class EmpleadoFijo extends Empleado {
 			return sueldoBruto;
 		}
 		else if (this.getTipoLiquidacion().equalsIgnoreCase("SEMANAL")) {
-			diasTotales = 7;
-			horasTotales = 40;
-			diasTrabajados = diasTotales - feriados - diasVacaciones - diasEnfermedad - diasAusentes;
-			double montoDiasNormales = (sueldoBase/diasTotales) * diasTrabajados;
-			double montoFeriados = (sueldoBase/diasTotales) * feriados * 2;
+			diasTrabajados = diasContratados - feriados - diasVacaciones - diasEnfermedad - diasAusentes;
+			double montoDiasNormales = (sueldoBase/diasContratados) * diasTrabajados;
+			double montoFeriados = (sueldoBase/diasContratados) * feriados * 2;
 			double montoVacaciones = (sueldoBase/6) * diasVacaciones;
-			double montoEnfermedad = (sueldoBase/diasTotales) * diasEnfermedad;
-			double montoAusentes = (sueldoBase/diasTotales) * diasAusentes;
+			double montoEnfermedad = (sueldoBase/diasContratados) * diasEnfermedad;
+			double montoAusentes = (sueldoBase/diasContratados) * diasAusentes;
 			double montoHorasExtra = (sueldoBase/horasTotales) * 1.5 * horasExtra;
 			double montoBonos = 0;
 			for (Concepto c : this.getConceptos())
@@ -127,7 +129,6 @@ public class EmpleadoFijo extends Empleado {
 			return sueldoBruto;
 		}
 		else { //queda solo la opcion diaria
-			diasTotales = 1;
 			horasTotales = 8;
 			double sueldoBruto=0; //si esta ausente, no cobra.
 			if(diasAusentes != 1) {

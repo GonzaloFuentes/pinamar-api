@@ -24,7 +24,7 @@ public interface ClienteService {
 	public Cliente saveCliente(Cliente c);
 	public void deleteCliente(String id);
 	public void updateCliente(Cliente c);
-	public Empleado saveEmpleado(Empleado e, String tipo, double valor);
+	public Empleado saveEmpleado(Empleado e, String tipo, double valor, int diasContratados);
 	public EmpleadoView findEmpleadoById(String _id);
 	public List<Empleado> getEmpleadosByCliente(Cliente c);
 	List<EmpleadoFijo> getEmpleadosFijoByCliente(Cliente c);
