@@ -193,9 +193,9 @@ public class ClienteController {
 	
 	@GetMapping("/informes")
 	public ResponseEntity<List<InformeDTO>> enviarAlBanco() {
-		String cbuOrigen = "";
-		String cbuDestino = "";
-		double monto = 0;
+		String origenCBU = "";
+		String destinoCBU = "";
+		double amount = 0;
 		List<InformeDTO> informes = new ArrayList<InformeDTO>();
 		List<Liquidacion> liqs = clientesServ.getLiquidacionesNoFacturadas();
 		List<Cliente> clientes = clientesServ.getAllClientes();
@@ -206,18 +206,18 @@ public class ClienteController {
 			for (ObjectId rec : liq.getRecibos()) {
 				for(Recibo r : recibos) {
 					if(r.getId().equalsIgnoreCase(rec.toHexString())) {
-						monto = r.getSueldoNeto();
+						amount = r.getSueldoNeto();
 						for (Cliente c : clientes) {
 							for (ObjectId l : c.getLiquidaciones()) {
 								if(l.toHexString().equalsIgnoreCase(liq.getId())) {
-									cbuOrigen = c.getCbu();
+									origenCBU = c.getCbu();
 									for(Empleado e : empleados) {
 										for (ObjectId re : e.getRecibos()) {
 											if(re.toHexString().equalsIgnoreCase(r.getId())) {
-												cbuDestino = e.getCbu();
+												destinoCBU = e.getCbu();
 												liq.setFacturada(true);
 												clientesServ.updateLiquidacion(liq);
-												InformeDTO info = new InformeDTO(cbuOrigen, cbuDestino, monto);
+												InformeDTO info = new InformeDTO(origenCBU, destinoCBU, amount);
 												informes.add(info);
 											}
 										}
@@ -230,13 +230,13 @@ public class ClienteController {
 			}
 		}
 		for (Factura f : facturas) {
-			monto = f.getTotal();
+			amount = f.getTotal();
 			Cliente aux = clientesServ.findById(f.getId_cliente());
-			cbuOrigen = aux.getCbu();
-			cbuDestino = "1942414460182641";
+			origenCBU = aux.getCbu();
+			destinoCBU = "1942414460182641";
 			f.setPendiente(false);
 			clientesServ.updateFactura(f);
-			InformeDTO info = new InformeDTO(cbuOrigen, cbuDestino, monto);
+			InformeDTO info = new InformeDTO(origenCBU, destinoCBU, amount);
 			informes.add(info);
 		}
 		return ResponseEntity.ok(informes);
