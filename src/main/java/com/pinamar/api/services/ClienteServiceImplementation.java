@@ -320,7 +320,7 @@ public class ClienteServiceImplementation implements ClienteService{
 		return facturas.get();
 	}
 
-	public EmpleadoView findEmpleadoByCuit(String cuit) {
+	public EmpleadoView findEmpleadoByCuit(String cuit) throws EmpleadoException {
 		Optional<EmpleadoView> e = clienteRepo.findEmpleadoByCuit(cuit);
 		if (e.isPresent())
 			return e.get();

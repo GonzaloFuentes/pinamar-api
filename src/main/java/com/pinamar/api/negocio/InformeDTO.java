@@ -2,34 +2,34 @@ package com.pinamar.api.negocio;
 
 public class InformeDTO {
 
-	private String cbuOrigen;
-	private String cbuDestino;
-	private double monto;
+	private String origenCBU;
+	private String destinoCBU;
+	private double amount;
 	
-	public InformeDTO(String cbuOrigen, String cbuDestino, double monto) {
+	public InformeDTO(String origenCBU, String destinoCBU, double amount) {
 		super();
-		this.cbuOrigen = cbuOrigen;
-		this.cbuDestino = cbuDestino;
-		this.monto = monto;
+		this.origenCBU = origenCBU;
+		this.destinoCBU = destinoCBU;
+		this.amount = amount;
 	}
 
 	public String getCbuOrigen() {
-		return cbuOrigen;
+		return origenCBU;
 	}
-	public void setCbuOrigen(String cbuOrigen) {
-		this.cbuOrigen = cbuOrigen;
+	public void setCbuOrigen(String origenCBU) {
+		this.origenCBU = origenCBU;
 	}
 	public String getCbuDestino() {
-		return cbuDestino;
+		return destinoCBU;
 	}
-	public void setCbuDestino(String cbuDestino) {
-		this.cbuDestino = cbuDestino;
+	public void setCbuDestino(String destinoCBU) {
+		this.destinoCBU = destinoCBU;
 	}
 	public double getMonto() {
-		return monto;
+		return amount;
 	}
-	public void setMonto(double monto) {
-		this.monto = monto;
+	public void setMonto(double amount) {
+		this.amount = amount;
 	}
 
 }

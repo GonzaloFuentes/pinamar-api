@@ -10,6 +10,7 @@ import javax.validation.Valid;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -263,9 +264,15 @@ public class ClienteController {
 	}
 	
 	@PostMapping("/empleados/{cuit}/novedades")
-	public ResponseEntity<Empleado> addNovedad(@RequestBody @Valid Novedad n, @PathVariable("cuit") String cuit) {
+	public ResponseEntity<String> addNovedad(@RequestBody @Valid Novedad n, @PathVariable("cuit") String cuit) {
 		//se devuelve el empleado para mostrar que las novedades se agregaron correctamente
-		EmpleadoView ev = clientesServ.findEmpleadoByCuit(cuit);
+		
+		EmpleadoView ev = null;
+		try {
+			ev = clientesServ.findEmpleadoByCuit(cuit);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+		}
 		EmpleadoFijo ef = null;
 		EmpleadoPorHora eh = null;
 		if(ev.getTipo().equalsIgnoreCase("FIJO")) {
@@ -280,7 +287,7 @@ public class ClienteController {
 			clientesServ.updateEmpleadoFijo(ef);
 			n.setIdEmpleado(new ObjectId(ef.getId()));
 			clientesServ.saveNovedad(n);
-			return ResponseEntity.ok(ef);
+			return ResponseEntity.ok(ef.getCuit());
 		}
 		else {
 			eh = new EmpleadoPorHora(new ObjectId(ev.getId()), ev.getDni(), ev.getCuit(), ev.getNombre(), ev.getDireccion(), ev.getPuesto(), ev.getFechaIngreso(), 
@@ -289,7 +296,7 @@ public class ClienteController {
 			clientesServ.updateEmpleadoHora(eh);
 			n.setIdEmpleado(new ObjectId(eh.getId()));
 			clientesServ.saveNovedad(n);
-			return ResponseEntity.ok(eh);
+			return ResponseEntity.ok(eh.getCuit());
 		}
 	}
 	
