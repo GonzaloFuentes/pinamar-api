@@ -45,4 +45,6 @@ public interface ClienteRepositorio{
 	List<Recibo> getAllRecibos();
 	List<Factura> gettAllFacturasPendientes();
 	List<Empleado> gettAllEmpleados();
+	public void updateLiquidacion(Liquidacion liq);
+	public void updateFactura(Factura f);
 }

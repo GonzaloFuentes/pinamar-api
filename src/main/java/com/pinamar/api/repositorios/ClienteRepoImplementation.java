@@ -234,5 +234,13 @@ public class ClienteRepoImplementation implements ClienteRepositorio{
 		}
 		return aux;
 	}
+
+	public void updateLiquidacion(Liquidacion liq) {
+		this.mongoOp.save(liq);
+	}
+
+	public void updateFactura(Factura f) {
+		this.mongoOp.save(f);
+	}
 	
 }

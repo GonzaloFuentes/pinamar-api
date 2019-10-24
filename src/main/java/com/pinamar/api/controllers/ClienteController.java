@@ -214,6 +214,8 @@ public class ClienteController {
 										for (ObjectId re : e.getRecibos()) {
 											if(re.toHexString().equalsIgnoreCase(r.getId())) {
 												cbuDestino = e.getCbu();
+												liq.setFacturada(true);
+												clientesServ.updateLiquidacion(liq);
 												InformeDTO info = new InformeDTO(cbuOrigen, cbuDestino, monto);
 												informes.add(info);
 											}
@@ -230,7 +232,9 @@ public class ClienteController {
 			monto = f.getTotal();
 			Cliente aux = clientesServ.findById(f.getId_cliente());
 			cbuOrigen = aux.getCbu();
-			cbuDestino = "1905";
+			cbuDestino = "1942414460182641";
+			f.setPendiente(false);
+			clientesServ.updateFactura(f);
 			InformeDTO info = new InformeDTO(cbuOrigen, cbuDestino, monto);
 			informes.add(info);
 		}

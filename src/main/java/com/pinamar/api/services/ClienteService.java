@@ -48,5 +48,7 @@ public interface ClienteService {
 	List<Factura> getAllFacturasPendientes();
 	List<Empleado> getAllEmpleados();
 	List<Liquidacion> getLiquidacionesByCliente(Cliente c);
+	public void updateLiquidacion(Liquidacion liq);
+	public void updateFactura(Factura f);
 
 }

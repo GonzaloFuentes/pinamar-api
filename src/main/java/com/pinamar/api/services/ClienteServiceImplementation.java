@@ -354,4 +354,13 @@ public class ClienteServiceImplementation implements ClienteService{
 		return liqs;
 	}
 
+	public void updateLiquidacion(Liquidacion liq) {
+		this.clienteRepo.updateLiquidacion(liq);
+		
+	}
+
+	public void updateFactura(Factura f) {
+		this.clienteRepo.updateFactura(f);
+	}
+
 }
