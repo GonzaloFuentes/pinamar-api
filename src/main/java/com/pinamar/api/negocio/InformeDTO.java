@@ -13,22 +13,27 @@ public class InformeDTO {
 		this.amount = amount;
 	}
 
-	public String getCbuOrigen() {
+	public String getOrigenCBU() {
 		return origenCBU;
 	}
-	public void setCbuOrigen(String origenCBU) {
+
+	public void setOrigenCBU(String origenCBU) {
 		this.origenCBU = origenCBU;
 	}
-	public String getCbuDestino() {
+
+	public String getDestinoCBU() {
 		return destinoCBU;
 	}
-	public void setCbuDestino(String destinoCBU) {
+
+	public void setDestinoCBU(String destinoCBU) {
 		this.destinoCBU = destinoCBU;
 	}
-	public double getMonto() {
+
+	public double getAmount() {
 		return amount;
 	}
-	public void setMonto(double amount) {
+
+	public void setAmount(double amount) {
 		this.amount = amount;
 	}
 
