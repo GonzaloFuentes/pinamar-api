@@ -1,6 +1,7 @@
 package com.pinamar.api.services;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -82,14 +83,17 @@ public class ClienteServiceImplementation implements ClienteService{
 	}
 
 	public Empleado saveEmpleado(Empleado e, String tipo, double valor, int diasContratados) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(new Date()); 
+		calendar.add(Calendar.DAY_OF_YEAR, -1);
 		if(tipo.equalsIgnoreCase("FIJO")) {
 			EmpleadoFijo empF = new EmpleadoFijo(new ObjectId(), e.getDni(), e.getCuit(), e.getNombre(), e.getDireccion(), e.getPuesto(), e.getFechaIngreso(), 
-					e.getTipoLiquidacion(), valor, 0, 0, 0, 0, 0, 0, e.getConceptos(), e.getCbu(), new ArrayList<ObjectId>(), null, diasContratados);
+					e.getTipoLiquidacion(), valor, 0, 0, 0, 0, 0, 0, e.getConceptos(), e.getCbu(), new ArrayList<ObjectId>(), calendar.getTime(), diasContratados);
 			return clienteRepo.saveEmpleadoFijo(empF);
 		}
 		else { //Si no es es fijo, es por hora
 			EmpleadoPorHora empH = new EmpleadoPorHora(new ObjectId(), e.getDni(), e.getCuit(), e.getNombre(), e.getDireccion(), e.getPuesto(), 
-					e.getFechaIngreso(), e.getTipoLiquidacion(), valor, 0, e.getConceptos(), e.getCbu(), new ArrayList<ObjectId>(), null);
+					e.getFechaIngreso(), e.getTipoLiquidacion(), valor, 0, e.getConceptos(), e.getCbu(), new ArrayList<ObjectId>(), calendar.getTime());
 			return clienteRepo.saveEmpleadoHora(empH);
 		}
 	}
