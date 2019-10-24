@@ -266,7 +266,6 @@ public class ClienteController {
 	@PostMapping("/empleados/{cuit}/novedades")
 	public ResponseEntity<String> addNovedad(@RequestBody @Valid Novedad n, @PathVariable("cuit") String cuit) {
 		//se devuelve el empleado para mostrar que las novedades se agregaron correctamente
-		
 		EmpleadoView ev = null;
 		try {
 			ev = clientesServ.findEmpleadoByCuit(cuit);
@@ -279,7 +278,11 @@ public class ClienteController {
 			ef = new EmpleadoFijo(new ObjectId(ev.getId()), ev.getDni(), ev.getCuit(), ev.getNombre(), ev.getDireccion(), ev.getPuesto(), ev.getFechaIngreso(), 
 					ev.getTipoLiquidacion(), ev.getSueldoBase(), ev.getDiasAusentes(), ev.getDiasEnfermedad(), ev.getDiasVacaciones(), ev.getHorasExtras(), 
 					ev.getFeriados(), ev.getDiasTrabajados(), ev.getConceptos(), ev.getCbu(), ev.getRecibos(), ev.getUltimaLiquidacion(), ev.getDiasContratados());
-			ef.setDiasAusentes(n.getDiasAusentes());
+			if((n.getDiasAusentes() < n.getDiasEnfermedad() + n.getDiasVacaciones()) || (ef.getDiasContratados() < n.getDiasAusentes() + n.getFeriados())) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Los dias son inconsistentes. Los ausentes por enfermedad mas los ausentes por vacaciones son mas que los ausentes totales o los ausentes totales mas los feriados trabajados es mas que los dias establecidos por contrato");
+			}
+			int ausencias = n.getDiasAusentes() - n.getDiasEnfermedad() - n.getDiasVacaciones();
+			ef.setDiasAusentes(ausencias);
 			ef.setDiasEnfermedad(n.getDiasEnfermedad());
 			ef.setDiasVacaciones(n.getDiasVacaciones());
 			ef.setHorasExtra(n.getHorasExtra());
@@ -325,6 +328,12 @@ public class ClienteController {
 		Liquidacion l = liqs.get(liqs.size()-1);
 		ResumenEscuelaDTO r = new ResumenEscuelaDTO(l.getFecha(), (float) l.getTotal(), l.isFacturada());
 		return ResponseEntity.ok(r);
+	}
+	
+	@GetMapping("/liquidaciones-cliente/{cuit}")
+	public ResponseEntity<List<Liquidacion>> getLiquidacionesByCliente(@PathVariable("cuit") String cuit){
+		Cliente c = clientesServ.findByCuit(cuit);
+		return ResponseEntity.ok(clientesServ.getLiquidacionesByCliente(c));
 	}
 	
 	@GetMapping("/empleados/recibos/{id_recibo}")

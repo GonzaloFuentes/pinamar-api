@@ -15,7 +15,7 @@ public class EmpleadoFijo extends Empleado {
 	private int diasVacaciones; //sueldo base dividido 25 por cantidad de dias vacaciones
 	private int horasExtra; //sueldo sobre 160 horas por hora extra por 50% de la hora
 	private int feriados; //sueldo base / 30 * 2 * dia
-	private int diasTrabajados; //ademas de para hacer la cuenta, se quiere guardar
+	private int diasTrabajados; //son los dias normales de trabajo, pagan por 1. ademas de para hacer la cuenta, se quiere guardar
 	private int diasContratados;
 	
 	public EmpleadoFijo(ObjectId _id, int dni, String cuit, String nombre, String direccion, String puesto, Date fechaIngreso, String tipoLiquidacion, double sueldoBase, 
@@ -83,7 +83,6 @@ public class EmpleadoFijo extends Empleado {
 	private double calcularSueldoBruto () {
 		int horasTotales = diasContratados * 8;
 		if(this.getTipoLiquidacion().equalsIgnoreCase("MENSUAL")) {
-			horasTotales = diasContratados * 8;
 			diasTrabajados = diasContratados - feriados - diasVacaciones - diasEnfermedad - diasAusentes;
 			double montoDiasNormales = (sueldoBase/diasContratados) * diasTrabajados;
 			double montoFeriados = (sueldoBase/diasContratados) * feriados * 2;
