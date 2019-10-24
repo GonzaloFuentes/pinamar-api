@@ -83,11 +83,13 @@ public class ClienteServiceImplementation implements ClienteService{
 
 	public Empleado saveEmpleado(Empleado e, String tipo, double valor) {
 		if(tipo.equalsIgnoreCase("FIJO")) {
-			EmpleadoFijo empF = new EmpleadoFijo(new ObjectId(), e.getDni(), e.getNombre(), e.getDireccion(), e.getPuesto(), e.getFechaIngreso(), e.getTipoLiquidacion(), valor, 0, 0, 0, 0, 0, 0, e.getConceptos(), e.getCbu());
+			EmpleadoFijo empF = new EmpleadoFijo(new ObjectId(), e.getDni(), e.getCuit(), e.getNombre(), e.getDireccion(), e.getPuesto(), e.getFechaIngreso(), 
+					e.getTipoLiquidacion(), valor, 0, 0, 0, 0, 0, 0, e.getConceptos(), e.getCbu(), new ArrayList<ObjectId>(), null);
 			return clienteRepo.saveEmpleadoFijo(empF);
 		}
 		else { //Si no es es fijo, es por hora
-			EmpleadoPorHora empH = new EmpleadoPorHora(new ObjectId(), e.getDni(), e.getNombre(), e.getDireccion(), e.getPuesto(), e.getFechaIngreso(), e.getTipoLiquidacion(), valor, 0, e.getConceptos(), e.getCbu());
+			EmpleadoPorHora empH = new EmpleadoPorHora(new ObjectId(), e.getDni(), e.getCuit(), e.getNombre(), e.getDireccion(), e.getPuesto(), 
+					e.getFechaIngreso(), e.getTipoLiquidacion(), valor, 0, e.getConceptos(), e.getCbu(), new ArrayList<ObjectId>(), null);
 			return clienteRepo.saveEmpleadoHora(empH);
 		}
 	}
@@ -123,154 +125,170 @@ public class ClienteServiceImplementation implements ClienteService{
 
 	public Liquidacion liquidacionMensual(List<EmpleadoFijo> empleadosFijos, List<EmpleadoPorHora> empleadosPorHora, Cliente c) {
 		Recibo rec;
+		Liquidacion liq = null;
 		List<Recibo> recibos = new ArrayList<Recibo>();
 		for (EmpleadoFijo e : empleadosFijos) {
 			if(e.getTipoLiquidacion().equalsIgnoreCase("MENSUAL")) {
 				rec = e.liquidarSueldo();
-				recibos.add(rec);
-				clienteRepo.updateEmpleadoFijo(e); //deberia actualizar al empleado y agregarle un item al array de recibos, nada mas. el add recibo lo hace dentro del liquidar sueldo
+				if(rec != null) {
+					recibos.add(rec);
+					clienteRepo.updateEmpleadoFijo(e); //deberia actualizar al empleado y agregarle un item al array de recibos, nada mas. el add recibo lo hace dentro del liquidar sueldo
+				}
 			}
 		}
 		for (EmpleadoPorHora e : empleadosPorHora) {
 			if(e.getTipoLiquidacion().equalsIgnoreCase("MENSUAL")) {
 				rec = e.liquidarSueldo();
-				recibos.add(rec);
-				clienteRepo.updateEmpleadoHora(e); //deberia actualizar al empleado y agregarle un item al array de recibos, nada mas. el add recibo lo hace dentro del liquidar sueldo
+				if(rec != null) {
+					recibos.add(rec);
+					clienteRepo.updateEmpleadoHora(e); //deberia actualizar al empleado y agregarle un item al array de recibos, nada mas. el add recibo lo hace dentro del liquidar sueldo
+				}
 			}
 		}
-		List<ObjectId> rs = new ArrayList<ObjectId>();
-		double total = 0;
-		for (Recibo r : recibos) {
-			rs.add(new ObjectId(r.getId()));
-			total += r.getSueldoNeto();
-			clienteRepo.saveRecibo(r);
-		}
-		Liquidacion liq = null;
 		if(!recibos.isEmpty()) {
-			liq = new Liquidacion(new ObjectId(), rs, "MENSUAL", new Date(), total);
+			List<ObjectId> rs = new ArrayList<ObjectId>();
+			double total = 0;
+			for (Recibo r : recibos) {
+				rs.add(new ObjectId(r.getId()));
+				total += r.getSueldoNeto();
+				clienteRepo.saveRecibo(r);
+			}
+			liq = new Liquidacion(new ObjectId(), rs, "MENSUAL", new Date(), total, false);
 			c.addLiquidacion(new ObjectId(liq.getId()));
 			clienteRepo.saveLiquidacion(liq);
 			clienteRepo.updateCliente(c); //deberia actualizar al cliente y agregarle un item al array de liquidaciones, nada mas
 			
-			Factura f = new Factura(new ObjectId(), c.getId(), liq.getId(), new Date(), (recibos.size() * 200));
+			Factura f = new Factura(new ObjectId(), c.getId(), liq.getId(), new Date(), (recibos.size() * 200), true);
 			clienteRepo.saveFactura(f);
 			return liq;
 		}
-		else return liq;
+		return liq;
 	}
 
 	public Liquidacion liquidacionQuincenal(List<EmpleadoFijo> empleadosFijos, List<EmpleadoPorHora> empleadosPorHora, Cliente c) {
 		Recibo rec;
+		Liquidacion liq = null;
 		List<Recibo> recibos = new ArrayList<Recibo>();
 		for (EmpleadoFijo e : empleadosFijos) {
 			if(e.getTipoLiquidacion().equalsIgnoreCase("QUINCENAL")) {
 				rec = e.liquidarSueldo();
-				recibos.add(rec);
-				clienteRepo.updateEmpleadoFijo(e); //deberia actualizar al empleado y agregarle un item al array de recibos, nada mas. el add recibo lo hace dentro del liquidar sueldo
+				if(rec != null) {
+					recibos.add(rec);
+					clienteRepo.updateEmpleadoFijo(e); //deberia actualizar al empleado y agregarle un item al array de recibos, nada mas. el add recibo lo hace dentro del liquidar sueldo
+				}
 			}
 		}
 		for (EmpleadoPorHora e : empleadosPorHora) {
 			if(e.getTipoLiquidacion().equalsIgnoreCase("QUINCENAL")) {
 				rec = e.liquidarSueldo();
-				recibos.add(rec);
-				clienteRepo.updateEmpleadoHora(e); //deberia actualizar al empleado y agregarle un item al array de recibos, nada mas. el add recibo lo hace dentro del liquidar sueldo
+				if(rec != null) {
+					recibos.add(rec);
+					clienteRepo.updateEmpleadoHora(e); //deberia actualizar al empleado y agregarle un item al array de recibos, nada mas. el add recibo lo hace dentro del liquidar sueldo
+				}
 			}
 		}
-		List<ObjectId> rs = new ArrayList<ObjectId>();
-		double total = 0;
-		for (Recibo r : recibos) {
-			rs.add(new ObjectId(r.getId()));
-			total += r.getSueldoNeto();
-			clienteRepo.saveRecibo(r);
-		}
-		Liquidacion liq = null;
 		if(!recibos.isEmpty()) {
-			liq = new Liquidacion(new ObjectId(), rs, "QUINCENAL", new Date(), total);
+			List<ObjectId> rs = new ArrayList<ObjectId>();
+			double total = 0;
+			for (Recibo r : recibos) {
+				rs.add(new ObjectId(r.getId()));
+				total += r.getSueldoNeto();
+				clienteRepo.saveRecibo(r);
+			}
+			liq = new Liquidacion(new ObjectId(), rs, "QUINCENAL", new Date(), total, false);
 			c.addLiquidacion(new ObjectId(liq.getId()));
 			clienteRepo.saveLiquidacion(liq);
 			clienteRepo.updateCliente(c); //deberia actualizar al cliente y agregarle un item al array de liquidaciones, nada mas
 			
-			Factura f = new Factura(new ObjectId(), c.getId(), liq.getId(), new Date(), (recibos.size() * 200));
+			Factura f = new Factura(new ObjectId(), c.getId(), liq.getId(), new Date(), (recibos.size() * 200), true);
 			clienteRepo.saveFactura(f);
 			return liq;
 		}
-		else return liq;
+		return liq;
 	}
 
 	public Liquidacion liquidacionSemanal(List<EmpleadoFijo> empleadosFijos, List<EmpleadoPorHora> empleadosPorHora, Cliente c) {
 		Recibo rec;
+		Liquidacion liq = null;
 		List<Recibo> recibos = new ArrayList<Recibo>();
 		for (EmpleadoFijo e : empleadosFijos) {
 			if(e.getTipoLiquidacion().equalsIgnoreCase("SEMANAL")) {
 				rec = e.liquidarSueldo();
-				recibos.add(rec);
-				clienteRepo.updateEmpleadoFijo(e); //deberia actualizar al empleado y agregarle un item al array de recibos, nada mas. el add recibo lo hace dentro del liquidar sueldo
+				if(rec != null) {
+					recibos.add(rec);
+					clienteRepo.updateEmpleadoFijo(e); //deberia actualizar al empleado y agregarle un item al array de recibos, nada mas. el add recibo lo hace dentro del liquidar sueldo
+				}
 			}
 		}
 		for (EmpleadoPorHora e : empleadosPorHora) {
 			if(e.getTipoLiquidacion().equalsIgnoreCase("SEMANAL")) {
 				rec = e.liquidarSueldo();
-				recibos.add(rec);
-				clienteRepo.updateEmpleadoHora(e); //deberia actualizar al empleado y agregarle un item al array de recibos, nada mas. el add recibo lo hace dentro del liquidar sueldo
+				if(rec != null) {
+					recibos.add(rec);
+					clienteRepo.updateEmpleadoHora(e); //deberia actualizar al empleado y agregarle un item al array de recibos, nada mas. el add recibo lo hace dentro del liquidar sueldo
+				}
 			}
 		}
-		List<ObjectId> rs = new ArrayList<ObjectId>();
-		double total = 0;
-		for (Recibo r : recibos) {
-			rs.add(new ObjectId(r.getId()));
-			total += r.getSueldoNeto();
-			clienteRepo.saveRecibo(r);
-		}
-		Liquidacion liq = null;
 		if(!recibos.isEmpty()) {
-			liq = new Liquidacion(new ObjectId(), rs, "SEMANAL", new Date(), total);
+			List<ObjectId> rs = new ArrayList<ObjectId>();
+			double total = 0;
+			for (Recibo r : recibos) {
+				rs.add(new ObjectId(r.getId()));
+				total += r.getSueldoNeto();
+				clienteRepo.saveRecibo(r);
+			}
+			liq = new Liquidacion(new ObjectId(), rs, "SEMANAL", new Date(), total, false);
 			c.addLiquidacion(new ObjectId(liq.getId()));
 			clienteRepo.saveLiquidacion(liq);
 			clienteRepo.updateCliente(c); //deberia actualizar al cliente y agregarle un item al array de liquidaciones, nada mas
 			
-			Factura f = new Factura(new ObjectId(), c.getId(), liq.getId(), new Date(), (recibos.size() * 200));
+			Factura f = new Factura(new ObjectId(), c.getId(), liq.getId(), new Date(), (recibos.size() * 200), true);
 			clienteRepo.saveFactura(f);
 			return liq;
 		}
-		else return liq;
+		return liq;
 	}
 
 	public Liquidacion liquidacionDiaria(List<EmpleadoFijo> empleadosFijos, List<EmpleadoPorHora> empleadosPorHora, Cliente c) {
 		Recibo rec;
+		Liquidacion liq = null;
 		List<Recibo> recibos = new ArrayList<Recibo>();
 		for (EmpleadoFijo e : empleadosFijos) {
 			if(e.getTipoLiquidacion().equalsIgnoreCase("DIARIA")) {
 				rec = e.liquidarSueldo();
-				recibos.add(rec);
-				clienteRepo.updateEmpleadoFijo(e); //deberia actualizar al empleado y agregarle un item al array de recibos, nada mas. el add recibo lo hace dentro del liquidar sueldo
+				if(rec != null) {
+					recibos.add(rec);
+					clienteRepo.updateEmpleadoFijo(e); //deberia actualizar al empleado y agregarle un item al array de recibos, nada mas. el add recibo lo hace dentro del liquidar sueldo
+				}
 			}
 		}
 		for (EmpleadoPorHora e : empleadosPorHora) {
 			if(e.getTipoLiquidacion().equalsIgnoreCase("DIARIA")) {
 				rec = e.liquidarSueldo();
-				recibos.add(rec);
-				clienteRepo.updateEmpleadoHora(e); //deberia actualizar al empleado y agregarle un item al array de recibos, nada mas. el add recibo lo hace dentro del liquidar sueldo
+				if(rec != null) {
+					recibos.add(rec);
+					clienteRepo.updateEmpleadoHora(e); //deberia actualizar al empleado y agregarle un item al array de recibos, nada mas. el add recibo lo hace dentro del liquidar sueldo
+				}
 			}
 		}
-		List<ObjectId> rs = new ArrayList<ObjectId>();
-		double total = 0;
-		for (Recibo r : recibos) {
-			rs.add(new ObjectId(r.getId()));
-			total += r.getSueldoNeto();
-			clienteRepo.saveRecibo(r);
-		}
-		Liquidacion liq = null;
 		if(!recibos.isEmpty()) {
-			liq = new Liquidacion(new ObjectId(), rs, "DIARIA", new Date(), total);
+			List<ObjectId> rs = new ArrayList<ObjectId>();
+			double total = 0;
+			for (Recibo r : recibos) {
+				rs.add(new ObjectId(r.getId()));
+				total += r.getSueldoNeto();
+				clienteRepo.saveRecibo(r);
+			}
+			liq = new Liquidacion(new ObjectId(), rs, "DIARIA", new Date(), total, false);
 			c.addLiquidacion(new ObjectId(liq.getId()));
 			clienteRepo.saveLiquidacion(liq);
 			clienteRepo.updateCliente(c); //deberia actualizar al cliente y agregarle un item al array de liquidaciones, nada mas
 			
-			Factura f = new Factura(new ObjectId(), c.getId(), liq.getId(), new Date(), (recibos.size() * 200));
+			Factura f = new Factura(new ObjectId(), c.getId(), liq.getId(), new Date(), (recibos.size() * 200), true);
 			clienteRepo.saveFactura(f);
 			return liq;
 		}
-		else return liq;
+		return liq;
 	}
 
 	public Liquidacion findLiquidacionById(String _id) throws LiquidacionException{
@@ -296,6 +314,30 @@ public class ClienteServiceImplementation implements ClienteService{
 	public List<Factura> findFacturasByCliente(String id) {
 		Optional<List<Factura>> facturas = clienteRepo.findFacturasByCliente(id);
 		return facturas.get();
+	}
+
+	public EmpleadoView findEmpleadoByCuit(int cuit) {
+		Optional<EmpleadoView> e = clienteRepo.findEmpleadoByCuit(cuit);
+		if (e.isPresent())
+			return e.get();
+		else
+			throw new EmpleadoException("Empleado con cuit: " + cuit + " no encontrado.");
+	}
+
+	public List<Liquidacion> getLiquidacionesNoFacturadas() {
+		return clienteRepo.getLiquidacionesNoFacturadas();
+	}
+
+	public List<Recibo> getAllRecibos() {
+		return clienteRepo.getAllRecibos();
+	}
+
+	public List<Factura> getAllFacturasPendientes() {
+		return clienteRepo.gettAllFacturasPendientes();
+	}
+
+	public List<Empleado> getAllEmpleados() {
+		return clienteRepo.gettAllEmpleados();
 	}
 
 }

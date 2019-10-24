@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @Document(collection = "novedades")
-@JsonPropertyOrder({"_id", "diasAusentes", "diasEnfermedad", "diasVacaciones", "horasExtra", "feriados", "id_empleado"})
+@JsonPropertyOrder({"_id", "diasAusentes", "diasEnfermedad", "diasVacaciones", "horasExtra", "feriados", "id_empleado", "horasTrabajadas"})
 public class Novedad implements Serializable {
 
 	private static final long serialVersionUID = 2816905778683760567L;
@@ -21,8 +21,8 @@ public class Novedad implements Serializable {
 	private int diasVacaciones;
 	private int horasExtra;
 	private int feriados;
-	private int horasTrabajadas;
 	private ObjectId id_empleado;
+	private int horasTrabajadas;
 	
 	public Novedad(ObjectId _id, int diasAusentes, int diasEnfermedad, int diasVacaciones, int horasExtra, int feriados, ObjectId id_empleado, int horasTrabajadas) {
 		super();

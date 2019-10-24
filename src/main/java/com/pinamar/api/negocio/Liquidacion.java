@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @Document(collection = "liquidaciones")
-@JsonPropertyOrder({"_id", "recibos", "tipo", "fecha", "total"})
+@JsonPropertyOrder({"_id", "recibos", "tipo", "fecha", "total", "facturada"})
 public class Liquidacion implements Serializable{
 	
 	private static final long serialVersionUID = -5011038249169885993L;
@@ -22,14 +22,16 @@ public class Liquidacion implements Serializable{
 	private String tipo;
 	private Date fecha;
 	private double total;
+	private boolean facturada;
 	
-	public Liquidacion(ObjectId _id, List<ObjectId> recibos, String tipo, Date fecha, double total) {
+	public Liquidacion(ObjectId _id, List<ObjectId> recibos, String tipo, Date fecha, double total, boolean facturada) {
 		super();
 		this._id = _id;
 		this.recibos = recibos;
 		this.tipo = tipo;
 		this.fecha = fecha;
 		this.total = total;
+		this.facturada = facturada;
 	}
 
 	public String getId() {
@@ -61,6 +63,12 @@ public class Liquidacion implements Serializable{
 	}
 	public void setTotal(double total) {
 		this.total = total;
+	}
+	public boolean isFacturada() {
+		return facturada;
+	}
+	public void setFacturada(boolean facturada) {
+		this.facturada = facturada;
 	}
 	
 }

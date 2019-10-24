@@ -42,5 +42,10 @@ public interface ClienteService {
 	public Recibo findReciboById(String hexString);
 	String findNombreEmpleadoRecibo(String id);
 	List<Factura> findFacturasByCliente(String id);
+	EmpleadoView findEmpleadoByCuit(int cuit);
+	List<Liquidacion> getLiquidacionesNoFacturadas();
+	List<Recibo> getAllRecibos();
+	List<Factura> getAllFacturasPendientes();
+	List<Empleado> getAllEmpleados();
 
 }

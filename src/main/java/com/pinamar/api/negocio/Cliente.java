@@ -11,13 +11,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @Document(collection = "clientes")
-@JsonPropertyOrder({"_id", "cuit", "nombre", "fisico", "empleados_id", "password", "liquidaciones", "diaMesLiquidacionMensual", "diaPrimerQuincena", "diaSegundaQuincena", "diaSemana"})
+@JsonPropertyOrder({"_id", "cuit", "cbu", "nombre", "fisico", "empleados_id", "password", "liquidaciones", "diaMesLiquidacionMensual", "diaPrimerQuincena", "diaSegundaQuincena", "diaSemana"})
 public class Cliente implements Serializable{
 	
 	private static final long serialVersionUID = 6458521016596172276L;
 	@Id
 	private ObjectId _id;
-	private String cuit;
+	private int cuit;
+	private String cbu;
 	private String nombre;
 	private boolean fisico;
 	private List<ObjectId> empleados_id;
@@ -28,11 +29,12 @@ public class Cliente implements Serializable{
 	private int diaSegundaQuincena;
 	private String diaSemana;
 	
-	public Cliente(ObjectId _id, String cuit, String nombre, boolean fisico, String password,
+	public Cliente(ObjectId _id, int cuit, String cbu, String nombre, boolean fisico, String password,
 			int diaMesLiquidacionMensual, int diaPrimerQuincena, int diaSegundaQuincena, String diaSemana) {
 		super();
 		this._id = _id;
 		this.cuit = cuit;
+		this.cbu = cbu;
 		this.nombre = nombre;
 		this.fisico = fisico;
 		this.password = password;
@@ -49,10 +51,10 @@ public class Cliente implements Serializable{
 	public void setId(ObjectId _id) {
 		this._id = _id;
 	}
-	public String getCuit() {
+	public int getCuit() {
 		return cuit;
 	}
-	public void setCuit(String cuit) {
+	public void setCuit(int cuit) {
 		this.cuit = cuit;
 	}
 	public String getNombre() {
@@ -120,6 +122,12 @@ public class Cliente implements Serializable{
 	}
 	public void setDiaSemana(String diaSemana) {
 		this.diaSemana = diaSemana;
+	}
+	public String getCbu() {
+		return cbu;
+	}
+	public void setCbu(String cbu) {
+		this.cbu = cbu;
 	}
 	
 }

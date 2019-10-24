@@ -62,7 +62,9 @@ public class ClienteRepoImplementation implements ClienteRepositorio{
 		return Optional.ofNullable(e);
 	}
 	public Empleado saveEmpleadoFijo(EmpleadoFijo e) {
-		EmpleadoView aux = new EmpleadoView(new ObjectId(e.getId()), e.getDni(), e.getNombre(), e.getDireccion(), e.getPuesto(), e.getFechaIngreso(), "FIJO", e.getTipoLiquidacion(), 0, 0, e.getSueldoBase(), e.getHorasExtra(), e.getDiasAusentes(), e.getDiasEnfermedad(), e.getDiasVacaciones(), e.getFeriados(), e.getDiasTrabajados(), e.getConceptos(), e.getCbu(), e.getRecibos());
+		EmpleadoView aux = new EmpleadoView(new ObjectId(e.getId()), e.getDni(), e.getCuit(), e.getNombre(), e.getDireccion(), e.getPuesto(), e.getFechaIngreso(), 
+				"FIJO", e.getTipoLiquidacion(), 0, 0, e.getSueldoBase(), e.getHorasExtra(), e.getDiasAusentes(), e.getDiasEnfermedad(), e.getDiasVacaciones(), 
+				e.getFeriados(), e.getDiasTrabajados(), e.getConceptos(), e.getCbu(), e.getRecibos(), e.getUltimaLiquidacion());
 		this.mongoOp.save(aux);
 		EmpleadoView emp = findEmpleadoById(aux.getId()).get();
 		e.setId(new ObjectId(emp.getId()));
@@ -70,7 +72,8 @@ public class ClienteRepoImplementation implements ClienteRepositorio{
 	}
 
 	public Empleado saveEmpleadoHora(EmpleadoPorHora e) {
-		EmpleadoView aux = new EmpleadoView(new ObjectId(e.getId()), e.getDni(), e.getNombre(), e.getDireccion(), e.getPuesto(), e.getFechaIngreso(), "POR HORA", e.getTipoLiquidacion(), e.getValorHora(), e.getHorasTrabajadas(), 0, 0, 0, 0, 0, 0, 0, e.getConceptos(), e.getCbu(), e.getRecibos());
+		EmpleadoView aux = new EmpleadoView(new ObjectId(e.getId()), e.getDni(), e.getCuit(), e.getNombre(), e.getDireccion(), e.getPuesto(), e.getFechaIngreso(), 
+				"POR HORA", e.getTipoLiquidacion(), e.getValorHora(), e.getHorasTrabajadas(), 0, 0, 0, 0, 0, 0, 0, e.getConceptos(), e.getCbu(), e.getRecibos(), e.getUltimaLiquidacion());
 		this.mongoOp.save(aux);
 		EmpleadoView emp = findEmpleadoById(aux.getId()).get();
 		e.setId(new ObjectId(emp.getId()));
@@ -86,18 +89,20 @@ public class ClienteRepoImplementation implements ClienteRepositorio{
 			EmpleadoFijo ef;
 			EmpleadoPorHora eh;
 			if(ev.getTipo().equalsIgnoreCase("FIJO")) {
-				ef = new EmpleadoFijo(new ObjectId(ev.getId()), ev.getDni(), ev.getNombre(), ev.getDireccion(), ev.getPuesto(), ev.getFechaIngreso(), ev.getTipoLiquidacion(), ev.getSueldoBase(), ev.getDiasAusentes(), ev.getDiasEnfermedad(), ev.getDiasVacaciones(), ev.getHorasExtras(), ev.getFeriados(), ev.getDiasTrabajados(), ev.getConceptos(), ev.getCbu());
+				ef = new EmpleadoFijo(new ObjectId(ev.getId()), ev.getDni(), ev.getCuit(), ev.getNombre(), ev.getDireccion(), ev.getPuesto(), ev.getFechaIngreso(), 
+						ev.getTipoLiquidacion(), ev.getSueldoBase(), ev.getDiasAusentes(), ev.getDiasEnfermedad(), ev.getDiasVacaciones(), ev.getHorasExtras(), ev.getFeriados(), 
+						ev.getDiasTrabajados(), ev.getConceptos(), ev.getCbu(), ev.getRecibos(), ev.getUltimaLiquidacion());
 				empleados.add(ef);
 			}
 			else {
-				eh = new EmpleadoPorHora(new ObjectId(ev.getId()), ev.getDni(), ev.getNombre(), ev.getDireccion(), ev.getPuesto(), ev.getFechaIngreso(), ev.getTipoLiquidacion(), ev.getValorHora(), ev.getHorasTrabajadas(), ev.getConceptos(), ev.getCbu());
+				eh = new EmpleadoPorHora(new ObjectId(ev.getId()), ev.getDni(), ev.getCuit(), ev.getNombre(), ev.getDireccion(), ev.getPuesto(), ev.getFechaIngreso(), 
+						ev.getTipoLiquidacion(), ev.getValorHora(), ev.getHorasTrabajadas(), ev.getConceptos(), ev.getCbu(), ev.getRecibos(), ev.getUltimaLiquidacion());
 				empleados.add(eh);
 			}
 		}
 		return empleados;
 	}
 
-	@Override
 	public List<EmpleadoFijo> getEmpleadosFijoByCliente(Cliente c) {
 		List<ObjectId> empIds = c.getEmpleados_id();
 		List<EmpleadoFijo> empleados = new ArrayList<EmpleadoFijo>();
@@ -106,14 +111,15 @@ public class ClienteRepoImplementation implements ClienteRepositorio{
 			EmpleadoView ev = evo.get();
 			EmpleadoFijo ef;
 			if(ev.getTipo().equalsIgnoreCase("FIJO")) {
-				ef = new EmpleadoFijo(new ObjectId(ev.getId()), ev.getDni(), ev.getNombre(), ev.getDireccion(), ev.getPuesto(), ev.getFechaIngreso(), ev.getTipoLiquidacion(), ev.getSueldoBase(), ev.getDiasAusentes(), ev.getDiasEnfermedad(), ev.getDiasVacaciones(), ev.getHorasExtras(), ev.getFeriados(), ev.getDiasTrabajados(), ev.getConceptos(), ev.getCbu());
+				ef = new EmpleadoFijo(new ObjectId(ev.getId()), ev.getDni(), ev.getCuit(), ev.getNombre(), ev.getDireccion(), ev.getPuesto(), ev.getFechaIngreso(), ev.getTipoLiquidacion(), 
+						ev.getSueldoBase(), ev.getDiasAusentes(), ev.getDiasEnfermedad(), ev.getDiasVacaciones(), ev.getHorasExtras(), ev.getFeriados(), ev.getDiasTrabajados(), 
+						ev.getConceptos(), ev.getCbu(), ev.getRecibos(), ev.getUltimaLiquidacion());
 				empleados.add(ef);
 			}
 		}
 		return empleados;
 	}
 
-	@Override
 	public List<EmpleadoPorHora> getEmpleadosHoraByCliente(Cliente c) {
 		List<ObjectId> empIds = c.getEmpleados_id();
 		List<EmpleadoPorHora> empleados = new ArrayList<EmpleadoPorHora>();
@@ -122,7 +128,8 @@ public class ClienteRepoImplementation implements ClienteRepositorio{
 			EmpleadoView ev = evo.get();
 			EmpleadoPorHora eh;
 			if(ev.getTipo().equalsIgnoreCase("POR HORA")) {
-				eh = new EmpleadoPorHora(new ObjectId(ev.getId()), ev.getDni(), ev.getNombre(), ev.getDireccion(), ev.getPuesto(), ev.getFechaIngreso(), ev.getTipoLiquidacion(), ev.getValorHora(), ev.getHorasTrabajadas(), ev.getConceptos(), ev.getCbu());
+				eh = new EmpleadoPorHora(new ObjectId(ev.getId()), ev.getDni(), ev.getCuit(), ev.getNombre(), ev.getDireccion(), ev.getPuesto(), ev.getFechaIngreso(), 
+						ev.getTipoLiquidacion(), ev.getValorHora(), ev.getHorasTrabajadas(), ev.getConceptos(), ev.getCbu(), ev.getRecibos(), ev.getUltimaLiquidacion());
 				empleados.add(eh);
 			}
 		}
@@ -138,12 +145,15 @@ public class ClienteRepoImplementation implements ClienteRepositorio{
 	}
 
 	public void updateEmpleadoFijo(EmpleadoFijo e) {
-		EmpleadoView aux = new EmpleadoView(new ObjectId(e.getId()), e.getDni(), e.getNombre(), e.getDireccion(), e.getPuesto(), e.getFechaIngreso(), "FIJO", e.getTipoLiquidacion(), 0, 0, e.getSueldoBase(), e.getHorasExtra(), e.getDiasAusentes(), e.getDiasEnfermedad(), e.getDiasVacaciones(), e.getFeriados(), e.getDiasTrabajados(), e.getConceptos(), e.getCbu(), e.getRecibos());
+		EmpleadoView aux = new EmpleadoView(new ObjectId(e.getId()), e.getDni(), e.getCuit(), e.getNombre(), e.getDireccion(), e.getPuesto(), e.getFechaIngreso(), "FIJO", 
+				e.getTipoLiquidacion(), 0, 0, e.getSueldoBase(), e.getHorasExtra(), e.getDiasAusentes(), e.getDiasEnfermedad(), e.getDiasVacaciones(), e.getFeriados(), 
+				e.getDiasTrabajados(), e.getConceptos(), e.getCbu(), e.getRecibos(), e.getUltimaLiquidacion());
 		this.mongoOp.save(aux);
 	}
 
 	public void updateEmpleadoHora(EmpleadoPorHora e) {
-		EmpleadoView aux = new EmpleadoView(new ObjectId(e.getId()), e.getDni(), e.getNombre(), e.getDireccion(), e.getPuesto(), e.getFechaIngreso(), "POR HORA", e.getTipoLiquidacion(), e.getValorHora(), e.getHorasTrabajadas(), 0, 0, 0, 0, 0, 0, 0, e.getConceptos(), e.getCbu(), e.getRecibos());
+		EmpleadoView aux = new EmpleadoView(new ObjectId(e.getId()), e.getDni(), e.getCuit(), e.getNombre(), e.getDireccion(), e.getPuesto(), e.getFechaIngreso(), "POR HORA", 
+				e.getTipoLiquidacion(), e.getValorHora(), e.getHorasTrabajadas(), 0, 0, 0, 0, 0, 0, 0, e.getConceptos(), e.getCbu(), e.getRecibos(), e.getUltimaLiquidacion());
 		this.mongoOp.save(aux);
 	}
 
@@ -168,13 +178,61 @@ public class ClienteRepoImplementation implements ClienteRepositorio{
 	}
 
 	public String findNombreEmpleadoRecibo(String id) {
+		List<EmpleadoView> emps = this.getAllEmpleados();
+		for (EmpleadoView e : emps) {
+			for(ObjectId r : e.getRecibos()) {
+				if(r.toHexString().equalsIgnoreCase(id))
+					return e.getNombre();
+			}
+		}
 		return null;
 	}
 
-	@Override
 	public Optional<List<Factura>> findFacturasByCliente(String id) {
 		List<Factura> facturas = this.mongoOp.find(new Query(Criteria.where("id_cliente").is(id)), Factura.class);
 		return Optional.ofNullable(facturas);
+	}
+	
+	private List<EmpleadoView> getAllEmpleados(){
+		return this.mongoOp.find(new Query(), EmpleadoView.class);
+	}
+
+	public Optional<EmpleadoView> findEmpleadoByCuit(int cuit) {
+		EmpleadoView e = this.mongoOp.findOne(new Query(Criteria.where("cuit").is(cuit)), EmpleadoView.class);
+		return Optional.ofNullable(e);
+	}
+
+	public List<Liquidacion> getLiquidacionesNoFacturadas() {
+		return this.mongoOp.find(new Query(Criteria.where("facturada").is(false)), Liquidacion.class);
+	}
+
+	@Override
+	public List<Recibo> getAllRecibos() {
+		return this.mongoOp.find(new Query(), Recibo.class);
+	}
+
+	@Override
+	public List<Factura> gettAllFacturasPendientes() {
+		return this.mongoOp.find(new Query(Criteria.where("pendiente").is(true)), Factura.class);
+	}
+
+	public List<Empleado> gettAllEmpleados() {
+		List<EmpleadoView> emps =  this.mongoOp.find(new Query(), EmpleadoView.class);
+		List<Empleado> aux = new ArrayList<Empleado>();
+		for (EmpleadoView ev : emps) {
+			if(ev.getTipo().equalsIgnoreCase("FIJO")) {
+				EmpleadoFijo ef = new EmpleadoFijo(new ObjectId(ev.getId()), ev.getDni(), ev.getCuit(), ev.getNombre(), ev.getDireccion(), ev.getPuesto(), ev.getFechaIngreso(), ev.getTipoLiquidacion(), 
+						ev.getSueldoBase(), ev.getDiasAusentes(), ev.getDiasEnfermedad(), ev.getDiasVacaciones(), ev.getHorasExtras(), ev.getFeriados(), ev.getDiasTrabajados(), 
+						ev.getConceptos(), ev.getCbu(), ev.getRecibos(), ev.getUltimaLiquidacion());
+				aux.add(ef);
+			}
+			else {
+				EmpleadoPorHora eh = new EmpleadoPorHora(new ObjectId(ev.getId()), ev.getDni(), ev.getCuit(), ev.getNombre(), ev.getDireccion(), ev.getPuesto(), ev.getFechaIngreso(), 
+						ev.getTipoLiquidacion(), ev.getValorHora(), ev.getHorasTrabajadas(), ev.getConceptos(), ev.getCbu(), ev.getRecibos(), ev.getUltimaLiquidacion());
+				aux.add(eh);
+			}
+		}
+		return aux;
 	}
 	
 }

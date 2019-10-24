@@ -10,12 +10,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @Document(collection = "empleados")
-@JsonPropertyOrder({"_id", "dni", "nombre", "direccion", "puesto", "fechaIngreso", "tipo", "tipoLiquidacion", "valorHora", "horasTrabajadas", "sueldoBase", "horasExtras", "diasAusentes", "diasEnfermedad", "diasVacaciones", "feriados", "diasTrabajados", "conceptos", "cbu", "recibos"})
+@JsonPropertyOrder({"_id", "dni", "cuit", "nombre", "direccion", "puesto", "fechaIngreso", "tipo", "tipoLiquidacion", "valorHora", "horasTrabajadas", "sueldoBase", "horasExtras", "diasAusentes", "diasEnfermedad", "diasVacaciones", "feriados", "diasTrabajados", "conceptos", "cbu", "recibos", "ultimaLiquidacion"})
 public class EmpleadoView {
 
 	@Id
 	private ObjectId _id;
 	private int dni;
+	private int cuit;
 	private String nombre;
 	private String direccion;
 	private String puesto;
@@ -34,12 +35,15 @@ public class EmpleadoView {
 	private List<Concepto> conceptos;
 	private String cbu;
 	private List<ObjectId> recibos;
+	private Date ultimaLiquidacion;
 	
-	public EmpleadoView(ObjectId _id, int dni, String nombre, String direccion, String puesto,
-			Date fechaIngreso, String tipo, String tipoLiquidacion, double valorHora, int horasTrabajadas, double sueldoBase, int horasExtras, int diasAusentes, int diasEnfermedad, int diasVacaciones, int feriados, int diasTrabajados, List<Concepto> conceptos, String cbu, List<ObjectId> recibos) {
+	public EmpleadoView(ObjectId _id, int dni, int cuit, String nombre, String direccion, String puesto,
+			Date fechaIngreso, String tipo, String tipoLiquidacion, double valorHora, int horasTrabajadas, double sueldoBase, int horasExtras, int diasAusentes, 
+			int diasEnfermedad, int diasVacaciones, int feriados, int diasTrabajados, List<Concepto> conceptos, String cbu, List<ObjectId> recibos, Date ultimaLiquidacion) {
 		super();
 		this._id = _id;
 		this.dni = dni;
+		this.cuit = cuit;
 		this.nombre = nombre;
 		this.direccion = direccion;
 		this.puesto = puesto;
@@ -58,6 +62,7 @@ public class EmpleadoView {
 		this.conceptos = conceptos;
 		this.cbu = cbu;
 		this.recibos = recibos;
+		this.ultimaLiquidacion = ultimaLiquidacion;
 	}
 
 	public String getId() {
@@ -71,6 +76,12 @@ public class EmpleadoView {
 	}
 	public void setDni(int dni) {
 		this.dni = dni;
+	}
+	public int getCuit() {
+		return cuit;
+	}
+	public void setCuit(int cuit) {
+		this.cuit = cuit;
 	}
 	public String getNombre() {
 		return nombre;
@@ -192,4 +203,11 @@ public class EmpleadoView {
 	public void removeRecibo(ObjectId id) {
 		this.recibos.remove(id);
 	}
+	public Date getUltimaLiquidacion() {
+		return ultimaLiquidacion;
+	}
+	public void setUltimaLiquidacion(Date ultimaLiquidacion) {
+		this.ultimaLiquidacion = ultimaLiquidacion;
+	}
+	
 }

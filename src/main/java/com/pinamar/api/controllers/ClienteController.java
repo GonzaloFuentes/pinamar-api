@@ -30,6 +30,7 @@ import com.pinamar.api.negocio.EmpleadoFijo;
 import com.pinamar.api.negocio.EmpleadoPorHora;
 import com.pinamar.api.negocio.EmpleadoView;
 import com.pinamar.api.negocio.Factura;
+import com.pinamar.api.negocio.InformeDTO;
 import com.pinamar.api.negocio.Liquidacion;
 import com.pinamar.api.negocio.LiquidacionDTO;
 import com.pinamar.api.negocio.Novedad;
@@ -80,9 +81,14 @@ public class ClienteController {
 		try {
 			empV = clientesServ.findEmpleadoById(_id);
 			if(empV.getTipo().equalsIgnoreCase("FIJO"))
-				empF = new EmpleadoFijo(new ObjectId(empV.getId()), empV.getDni(), empV.getNombre(), empV.getDireccion(), empV.getPuesto(), empV.getFechaIngreso(), empV.getTipoLiquidacion(), empV.getSueldoBase(), empV.getDiasAusentes(), empV.getDiasEnfermedad(), empV.getDiasVacaciones(), empV.getHorasExtras(), empV.getFeriados(), empV.getDiasTrabajados(), empV.getConceptos(), empV.getCbu());
+				empF = new EmpleadoFijo(new ObjectId(empV.getId()), empV.getDni(), empV.getCuit(), empV.getNombre(), empV.getDireccion(), empV.getPuesto(), 
+						empV.getFechaIngreso(), empV.getTipoLiquidacion(), empV.getSueldoBase(), empV.getDiasAusentes(), empV.getDiasEnfermedad(), 
+						empV.getDiasVacaciones(), empV.getHorasExtras(), empV.getFeriados(), empV.getDiasTrabajados(), empV.getConceptos(), empV.getCbu(), 
+						empV.getRecibos(), empV.getUltimaLiquidacion());
 			else
-				empH = new EmpleadoPorHora(new ObjectId(empV.getId()), empV.getDni(), empV.getNombre(), empV.getDireccion(), empV.getPuesto(), empV.getFechaIngreso(), empV.getTipoLiquidacion(), empV.getValorHora(), empV.getHorasTrabajadas(), empV.getConceptos(), empV.getCbu());
+				empH = new EmpleadoPorHora(new ObjectId(empV.getId()), empV.getDni(), empV.getCuit(), empV.getNombre(), empV.getDireccion(), empV.getPuesto(), 
+						empV.getFechaIngreso(), empV.getTipoLiquidacion(), empV.getValorHora(), empV.getHorasTrabajadas(), empV.getConceptos(), empV.getCbu(), 
+						empV.getRecibos(), empV.getUltimaLiquidacion());
 		}
 		catch(EmpleadoException e) {
 			empF = null;
@@ -118,7 +124,7 @@ public class ClienteController {
 		// los arrays se actualizan por otro metodo
 		//si es persona fisica o juridica me lo tiene pasar. un boolean no puede ser null, por eso no verifico
 		Cliente aux = clientesServ.findById(c.getId());
-		if(c.getCuit() != null)
+		if(c.getCuit() != 0)
 			aux.setCuit(c.getCuit());;
 		if(c.getNombre() != null)
 			aux.setNombre(c.getNombre());
@@ -183,32 +189,84 @@ public class ClienteController {
 		return ResponseEntity.ok(aux);
 	}
 	
+	@GetMapping("/informes")
+	public ResponseEntity<List<InformeDTO>> enviarAlBanco() {
+		String cbuOrigen = "";
+		String cbuDestino = "";
+		double monto = 0;
+		List<InformeDTO> informes = new ArrayList<InformeDTO>();
+		List<Liquidacion> liqs = clientesServ.getLiquidacionesNoFacturadas();
+		List<Cliente> clientes = clientesServ.getAllClientes();
+		List<Recibo> recibos = clientesServ.getAllRecibos();
+		List<Factura> facturas = clientesServ.getAllFacturasPendientes();
+		List<Empleado> empleados = clientesServ.getAllEmpleados();
+		for (Liquidacion liq : liqs) {
+			for (ObjectId rec : liq.getRecibos()) {
+				for(Recibo r : recibos) {
+					if(r.getId().equalsIgnoreCase(rec.toHexString())) {
+						monto = r.getSueldoNeto();
+						for (Cliente c : clientes) {
+							for (ObjectId l : c.getLiquidaciones()) {
+								if(l.toHexString().equalsIgnoreCase(liq.getId())) {
+									cbuOrigen = c.getCbu();
+									for(Empleado e : empleados) {
+										for (ObjectId re : e.getRecibos()) {
+											if(re.toHexString().equalsIgnoreCase(r.getId())) {
+												cbuDestino = e.getCbu();
+												InformeDTO info = new InformeDTO(cbuOrigen, cbuDestino, monto);
+												informes.add(info);
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		for (Factura f : facturas) {
+			monto = f.getTotal();
+			Cliente aux = clientesServ.findById(f.getId_cliente());
+			cbuOrigen = aux.getCbu();
+			cbuDestino = "1905";
+			InformeDTO info = new InformeDTO(cbuOrigen, cbuDestino, monto);
+			informes.add(info);
+		}
+		return ResponseEntity.ok(informes);
+	}
+	
 	@PostMapping("/empleados/{_id}/conceptos")
 	public ResponseEntity<Empleado> addConcepto(@RequestBody @Valid Concepto c, @PathVariable("_id") String _id) {
 		EmpleadoView ev = clientesServ.findEmpleadoById(_id);
 		EmpleadoFijo ef;
 		EmpleadoPorHora eh;
 		if(ev.getTipo().equalsIgnoreCase("FIJO")) {
-			ef = new EmpleadoFijo(new ObjectId(ev.getId()), ev.getDni(), ev.getNombre(), ev.getDireccion(), ev.getPuesto(), ev.getFechaIngreso(), ev.getTipoLiquidacion(), ev.getSueldoBase(), ev.getDiasAusentes(), ev.getDiasEnfermedad(), ev.getDiasVacaciones(), ev.getHorasExtras(), ev.getFeriados(), ev.getDiasTrabajados(), ev.getConceptos(), ev.getCbu());
+			ef = new EmpleadoFijo(new ObjectId(ev.getId()), ev.getDni(), ev.getCuit(), ev.getNombre(), ev.getDireccion(), ev.getPuesto(), 
+					ev.getFechaIngreso(), ev.getTipoLiquidacion(), ev.getSueldoBase(), ev.getDiasAusentes(), ev.getDiasEnfermedad(), ev.getDiasVacaciones(), 
+					ev.getHorasExtras(), ev.getFeriados(), ev.getDiasTrabajados(), ev.getConceptos(), ev.getCbu(), ev.getRecibos(), ev.getUltimaLiquidacion());
 			ef.addConcepto(c);
 			clientesServ.updateEmpleadoFijo(ef);
 			return ResponseEntity.ok(ef);
 		} else {
-			eh = new EmpleadoPorHora(new ObjectId(ev.getId()), ev.getDni(), ev.getNombre(), ev.getDireccion(), ev.getPuesto(), ev.getFechaIngreso(), ev.getTipoLiquidacion(), ev.getValorHora(), ev.getHorasTrabajadas(), ev.getConceptos(), ev.getCbu());
+			eh = new EmpleadoPorHora(new ObjectId(ev.getId()), ev.getDni(), ev.getCuit(), ev.getNombre(), ev.getDireccion(), ev.getPuesto(), ev.getFechaIngreso(), 
+					ev.getTipoLiquidacion(), ev.getValorHora(), ev.getHorasTrabajadas(), ev.getConceptos(), ev.getCbu(), ev.getRecibos(), ev.getUltimaLiquidacion());
 			eh.addConcepto(c);
 			clientesServ.updateEmpleadoHora(eh);
 			return ResponseEntity.ok(eh);
 		}
 	}
 	
-	@PostMapping("/empleados/{_id}/novedades")
-	public ResponseEntity<Empleado> addNovedad(@RequestBody @Valid Novedad n, @PathVariable("_id") String _id) {
+	@PostMapping("/empleados/{cuit}/novedades")
+	public ResponseEntity<Empleado> addNovedad(@RequestBody @Valid Novedad n, @PathVariable("cuit") int cuit) {
 		//se devuelve el empleado para mostrar que las novedades se agregaron correctamente
-		EmpleadoView ev = clientesServ.findEmpleadoById(_id);
+		EmpleadoView ev = clientesServ.findEmpleadoByCuit(cuit);
 		EmpleadoFijo ef = null;
 		EmpleadoPorHora eh = null;
 		if(ev.getTipo().equalsIgnoreCase("FIJO")) {
-			ef = new EmpleadoFijo(new ObjectId(ev.getId()), ev.getDni(), ev.getNombre(), ev.getDireccion(), ev.getPuesto(), ev.getFechaIngreso(), ev.getTipoLiquidacion(), ev.getSueldoBase(), ev.getDiasAusentes(), ev.getDiasEnfermedad(), ev.getDiasVacaciones(), ev.getHorasExtras(), ev.getFeriados(), ev.getDiasTrabajados(), ev.getConceptos(), ev.getCbu());
+			ef = new EmpleadoFijo(new ObjectId(ev.getId()), ev.getDni(), ev.getCuit(), ev.getNombre(), ev.getDireccion(), ev.getPuesto(), ev.getFechaIngreso(), 
+					ev.getTipoLiquidacion(), ev.getSueldoBase(), ev.getDiasAusentes(), ev.getDiasEnfermedad(), ev.getDiasVacaciones(), ev.getHorasExtras(), 
+					ev.getFeriados(), ev.getDiasTrabajados(), ev.getConceptos(), ev.getCbu(), ev.getRecibos(), ev.getUltimaLiquidacion());
 			ef.setDiasAusentes(n.getDiasAusentes());
 			ef.setDiasEnfermedad(n.getDiasEnfermedad());
 			ef.setDiasVacaciones(n.getDiasVacaciones());
@@ -220,7 +278,8 @@ public class ClienteController {
 			return ResponseEntity.ok(ef);
 		}
 		else {
-			eh = new EmpleadoPorHora(new ObjectId(ev.getId()), ev.getDni(), ev.getNombre(), ev.getDireccion(), ev.getPuesto(), ev.getFechaIngreso(), ev.getTipoLiquidacion(), ev.getValorHora(), ev.getHorasTrabajadas(), ev.getConceptos(), ev.getCbu());
+			eh = new EmpleadoPorHora(new ObjectId(ev.getId()), ev.getDni(), ev.getCuit(), ev.getNombre(), ev.getDireccion(), ev.getPuesto(), ev.getFechaIngreso(), 
+					ev.getTipoLiquidacion(), ev.getValorHora(), ev.getHorasTrabajadas(), ev.getConceptos(), ev.getCbu(), ev.getRecibos(), ev.getUltimaLiquidacion());
 			eh.setHorasTrabajadas(n.getHorasTrabajadas());
 			clientesServ.updateEmpleadoHora(eh);
 			n.setIdEmpleado(new ObjectId(eh.getId()));
@@ -247,8 +306,8 @@ public class ClienteController {
 		return ResponseEntity.ok(liquidacion);
 	}
 	
-	@GetMapping("/empleados/{id_empleado}/recibos/{id_recibo}")
-	public ResponseEntity<String> getNombreEmpleadoRecibo(@PathVariable("id") String id){
+	@GetMapping("/empleados/recibos/{id_recibo}")
+	public ResponseEntity<String> getNombreEmpleadoRecibo(@PathVariable("id_recibo") String id){
 		return ResponseEntity.ok(clientesServ.findNombreEmpleadoRecibo(id));
 	}
 	

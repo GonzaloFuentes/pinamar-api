@@ -1,6 +1,5 @@
 package com.pinamar.api.negocio;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -12,6 +11,7 @@ public class Empleado {
 	@Id
 	private ObjectId _id;
 	private int dni;
+	private int cuit;
 	private String nombre;
 	private String direccion;
 	private String puesto;
@@ -20,11 +20,13 @@ public class Empleado {
 	private List<Concepto> conceptos;
 	private String cbu;
 	private List<ObjectId> recibos;
+	private Date ultimaLiquidacion;
 
-	public Empleado(ObjectId _id, int dni, String nombre, String direccion, String puesto, Date fechaIngreso, String tipoLiquidacion, List<Concepto> conceptos, String cbu) {
+	public Empleado(ObjectId _id, int dni, int cuit, String nombre, String direccion, String puesto, Date fechaIngreso, String tipoLiquidacion, List<Concepto> conceptos, String cbu, List<ObjectId> recibos, Date ultimaLiquidacion) {
 		super();
 		this._id = _id;
 		this.dni = dni;
+		this.cuit = cuit;
 		this.nombre = nombre;
 		this.direccion = direccion;
 		this.puesto = puesto;
@@ -32,7 +34,8 @@ public class Empleado {
 		this.tipoLiquidacion = tipoLiquidacion;
 		this.conceptos = conceptos;
 		this.cbu = cbu;
-		this.recibos = new ArrayList<ObjectId>();
+		this.recibos = recibos;
+		this.ultimaLiquidacion = ultimaLiquidacion;
 	}
 
 	public String getId() {
@@ -46,6 +49,12 @@ public class Empleado {
 	}
 	public void setDni(int dni) {
 		this.dni = dni;
+	}
+	public int getCuit() {
+		return cuit;
+	}
+	public void setCuit(int cuit) {
+		this.cuit = cuit;
 	}
 	public String getNombre() {
 		return nombre;
@@ -106,6 +115,12 @@ public class Empleado {
 	}
 	public void removeRecibo(ObjectId id) {
 		this.recibos.remove(id);
+	}
+	public Date getUltimaLiquidacion() {
+		return ultimaLiquidacion;
+	}
+	public void setUltimaLiquidacion(Date ultimaLiquidacion) {
+		this.ultimaLiquidacion = ultimaLiquidacion;
 	}
 	
 }
