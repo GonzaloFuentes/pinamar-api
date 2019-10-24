@@ -12,7 +12,7 @@ public class EmpleadoPorHora extends Empleado{
 	private double valorHora;
 	private int horasTrabajadas;
 
-	public EmpleadoPorHora(ObjectId _id, int dni, int cuit, String nombre, String direccion, String puesto, Date fechaIngreso, String tipoLiquidacion, 
+	public EmpleadoPorHora(ObjectId _id, int dni, String cuit, String nombre, String direccion, String puesto, Date fechaIngreso, String tipoLiquidacion, 
 			double valorHora, int horasTrabajadas, List<Concepto> conceptos, String cbu, List<ObjectId> recibos, Date ultimaLiquidacion) {
 		super(_id, dni, cuit, nombre, direccion, puesto, fechaIngreso, tipoLiquidacion, conceptos, cbu, recibos, ultimaLiquidacion);
 		this.valorHora = valorHora;

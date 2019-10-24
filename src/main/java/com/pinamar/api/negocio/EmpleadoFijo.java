@@ -17,7 +17,7 @@ public class EmpleadoFijo extends Empleado {
 	private int feriados; //sueldo base / 30 * 2 * dia
 	private int diasTrabajados; //ademas de para hacer la cuenta, se quiere guardar
 	
-	public EmpleadoFijo(ObjectId _id, int dni, int cuit, String nombre, String direccion, String puesto, Date fechaIngreso, String tipoLiquidacion, double sueldoBase, 
+	public EmpleadoFijo(ObjectId _id, int dni, String cuit, String nombre, String direccion, String puesto, Date fechaIngreso, String tipoLiquidacion, double sueldoBase, 
 			int diasAusentes, int diasEnfermedad, int diasVacaciones, int horasExtra, int feriados, int diasTrabajados, List<Concepto> conceptos, String cbu, List<ObjectId> recibos, Date ultimaLiquidacion) {
 		super(_id, dni, cuit, nombre, direccion, puesto, fechaIngreso, tipoLiquidacion, conceptos, cbu, recibos, ultimaLiquidacion);
 		this.sueldoBase = sueldoBase;

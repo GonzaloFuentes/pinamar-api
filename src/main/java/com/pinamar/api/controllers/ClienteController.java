@@ -124,7 +124,7 @@ public class ClienteController {
 		// los arrays se actualizan por otro metodo
 		//si es persona fisica o juridica me lo tiene pasar. un boolean no puede ser null, por eso no verifico
 		Cliente aux = clientesServ.findById(c.getId());
-		if(c.getCuit() != 0)
+		if(c.getCuit() != null)
 			aux.setCuit(c.getCuit());;
 		if(c.getNombre() != null)
 			aux.setNombre(c.getNombre());

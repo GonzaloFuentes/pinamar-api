@@ -11,7 +11,7 @@ public class Empleado {
 	@Id
 	private ObjectId _id;
 	private int dni;
-	private int cuit;
+	private String cuit;
 	private String nombre;
 	private String direccion;
 	private String puesto;
@@ -22,7 +22,7 @@ public class Empleado {
 	private List<ObjectId> recibos;
 	private Date ultimaLiquidacion;
 
-	public Empleado(ObjectId _id, int dni, int cuit, String nombre, String direccion, String puesto, Date fechaIngreso, String tipoLiquidacion, List<Concepto> conceptos, String cbu, List<ObjectId> recibos, Date ultimaLiquidacion) {
+	public Empleado(ObjectId _id, int dni, String cuit, String nombre, String direccion, String puesto, Date fechaIngreso, String tipoLiquidacion, List<Concepto> conceptos, String cbu, List<ObjectId> recibos, Date ultimaLiquidacion) {
 		super();
 		this._id = _id;
 		this.dni = dni;
@@ -50,10 +50,10 @@ public class Empleado {
 	public void setDni(int dni) {
 		this.dni = dni;
 	}
-	public int getCuit() {
+	public String getCuit() {
 		return cuit;
 	}
-	public void setCuit(int cuit) {
+	public void setCuit(String cuit) {
 		this.cuit = cuit;
 	}
 	public String getNombre() {

@@ -17,7 +17,7 @@ public class Cliente implements Serializable{
 	private static final long serialVersionUID = 6458521016596172276L;
 	@Id
 	private ObjectId _id;
-	private int cuit;
+	private String cuit;
 	private String cbu;
 	private String nombre;
 	private boolean fisico;
@@ -29,7 +29,7 @@ public class Cliente implements Serializable{
 	private int diaSegundaQuincena;
 	private String diaSemana;
 	
-	public Cliente(ObjectId _id, int cuit, String cbu, String nombre, boolean fisico, String password,
+	public Cliente(ObjectId _id, String cuit, String cbu, String nombre, boolean fisico, String password,
 			int diaMesLiquidacionMensual, int diaPrimerQuincena, int diaSegundaQuincena, String diaSemana) {
 		super();
 		this._id = _id;
@@ -51,10 +51,10 @@ public class Cliente implements Serializable{
 	public void setId(ObjectId _id) {
 		this._id = _id;
 	}
-	public int getCuit() {
+	public String getCuit() {
 		return cuit;
 	}
-	public void setCuit(int cuit) {
+	public void setCuit(String cuit) {
 		this.cuit = cuit;
 	}
 	public String getNombre() {
