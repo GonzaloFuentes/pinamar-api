@@ -40,7 +40,7 @@ public interface ClienteRepositorio{
 	public void saveFactura(Factura f);
 	String findNombreEmpleadoRecibo(String id);
 	Optional <List<Factura>> findFacturasByCliente(String id);
-	Optional<EmpleadoView> findEmpleadoByCuit(int cuit);
+	Optional<EmpleadoView> findEmpleadoByCuit(String cuit);
 	List<Liquidacion> getLiquidacionesNoFacturadas();
 	List<Recibo> getAllRecibos();
 	List<Factura> gettAllFacturasPendientes();

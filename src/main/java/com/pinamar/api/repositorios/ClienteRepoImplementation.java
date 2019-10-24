@@ -197,7 +197,7 @@ public class ClienteRepoImplementation implements ClienteRepositorio{
 		return this.mongoOp.find(new Query(), EmpleadoView.class);
 	}
 
-	public Optional<EmpleadoView> findEmpleadoByCuit(int cuit) {
+	public Optional<EmpleadoView> findEmpleadoByCuit(String cuit) {
 		EmpleadoView e = this.mongoOp.findOne(new Query(Criteria.where("cuit").is(cuit)), EmpleadoView.class);
 		return Optional.ofNullable(e);
 	}

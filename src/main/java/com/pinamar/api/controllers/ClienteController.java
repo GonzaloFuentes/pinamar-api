@@ -258,7 +258,7 @@ public class ClienteController {
 	}
 	
 	@PostMapping("/empleados/{cuit}/novedades")
-	public ResponseEntity<Empleado> addNovedad(@RequestBody @Valid Novedad n, @PathVariable("cuit") int cuit) {
+	public ResponseEntity<Empleado> addNovedad(@RequestBody @Valid Novedad n, @PathVariable("cuit") String cuit) {
 		//se devuelve el empleado para mostrar que las novedades se agregaron correctamente
 		EmpleadoView ev = clientesServ.findEmpleadoByCuit(cuit);
 		EmpleadoFijo ef = null;
