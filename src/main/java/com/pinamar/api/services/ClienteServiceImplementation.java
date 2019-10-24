@@ -340,4 +340,14 @@ public class ClienteServiceImplementation implements ClienteService{
 		return clienteRepo.gettAllEmpleados();
 	}
 
+	public List<Liquidacion> getLiquidacionesByCliente(Cliente c) {
+		List<Liquidacion> liqs = new ArrayList<Liquidacion>();
+		Liquidacion l = null;
+		for (ObjectId id : c.getLiquidaciones()) {
+			l = this.findLiquidacionById(id.toHexString());
+			liqs.add(l);
+		}
+		return liqs;
+	}
+
 }

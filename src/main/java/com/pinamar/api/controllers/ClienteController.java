@@ -35,6 +35,7 @@ import com.pinamar.api.negocio.Liquidacion;
 import com.pinamar.api.negocio.LiquidacionDTO;
 import com.pinamar.api.negocio.Novedad;
 import com.pinamar.api.negocio.Recibo;
+import com.pinamar.api.negocio.ResumenEscuelaDTO;
 import com.pinamar.api.services.ClienteService;
 
 @RestController
@@ -288,7 +289,7 @@ public class ClienteController {
 		}
 	}
 	
-	@GetMapping("liquidaciones/{_id}")
+	@GetMapping("/liquidacion/{_id}")
 	public ResponseEntity<LiquidacionDTO> findLiquidacionById(@PathVariable("_id") String _id) throws LiquidacionException {
 		Liquidacion liq = null;
 		LiquidacionDTO liquidacion = null;
@@ -304,6 +305,15 @@ public class ClienteController {
 			liquidacion = null;
 		}
 		return ResponseEntity.ok(liquidacion);
+	}
+	
+	@GetMapping("/liquidaciones/{cuit}")
+	public ResponseEntity<ResumenEscuelaDTO> getUltimaLiquidacionByCliente(@PathVariable("cuit") String cuit){
+		Cliente c = clientesServ.findByCuit(cuit);
+		List<Liquidacion> liqs = clientesServ.getLiquidacionesByCliente(c);
+		Liquidacion l = liqs.get(liqs.size()-1);
+		ResumenEscuelaDTO r = new ResumenEscuelaDTO(l.getFecha(), (float) l.getTotal(), l.isFacturada());
+		return ResponseEntity.ok(r);
 	}
 	
 	@GetMapping("/empleados/recibos/{id_recibo}")
