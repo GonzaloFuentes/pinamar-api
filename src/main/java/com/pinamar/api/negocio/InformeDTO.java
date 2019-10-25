@@ -37,4 +37,6 @@ public class InformeDTO {
 		this.amount = amount;
 	}
 
+	
+
 }

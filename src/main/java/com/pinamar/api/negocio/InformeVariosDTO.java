@@ -32,7 +32,7 @@ public class InformeVariosDTO {
 	public Transferencia getTransferenciaByDestino(String destino) {
 		Transferencia aux = null;
 		for(Transferencia t : this.transferenciasUnicas) {
-			if(t.getCbuOrigen().equalsIgnoreCase(destino)) {
+			if(t.getOrigenCBU().equalsIgnoreCase(destino)) {
 				aux = t;
 			}
 		}
