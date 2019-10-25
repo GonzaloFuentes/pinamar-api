@@ -93,9 +93,10 @@ public class EmpleadoFijo extends Empleado {
 			double montoBonos = 0;
 			if(this.getConceptos() != null)
 				for (Concepto c : this.getConceptos())
-					if(c.getTipo().equalsIgnoreCase("BONIFICACION"))
+					if(c.getTipo().equalsIgnoreCase("BONIFICACION")) {
 						montoBonos += (c.getValor()*sueldoBase); //siempre es un porcentaje
-			double sueldoBruto = montoDiasNormales + montoFeriados + montoVacaciones + montoEnfermedad - montoAusentes + montoHorasExtra + montoBonos;
+					}
+			double sueldoBruto = montoDiasNormales + montoFeriados + montoVacaciones + montoEnfermedad + montoHorasExtra + montoBonos;
 			return sueldoBruto;
 		}
 		else if (this.getTipoLiquidacion().equalsIgnoreCase("QUINCENAL")) {
@@ -111,7 +112,7 @@ public class EmpleadoFijo extends Empleado {
 				for (Concepto c : this.getConceptos())
 					if(c.getTipo().equalsIgnoreCase("BONIFICACION"))
 						montoBonos += (c.getValor()*sueldoBase); //siempre es un porcentaje
-			double sueldoBruto = montoDiasNormales + montoFeriados + montoVacaciones + montoEnfermedad - montoAusentes + montoHorasExtra + montoBonos;
+			double sueldoBruto = montoDiasNormales + montoFeriados + montoVacaciones + montoEnfermedad + montoHorasExtra + montoBonos;
 			return sueldoBruto;
 		}
 		else if (this.getTipoLiquidacion().equalsIgnoreCase("SEMANAL")) {
@@ -127,7 +128,7 @@ public class EmpleadoFijo extends Empleado {
 				for (Concepto c : this.getConceptos())
 					if(c.getTipo().equalsIgnoreCase("BONIFICACION"))
 						montoBonos += (c.getValor()*sueldoBase); //siempre es un porcentaje
-			double sueldoBruto = montoDiasNormales + montoFeriados + montoVacaciones + montoEnfermedad - montoAusentes + montoHorasExtra + montoBonos;
+			double sueldoBruto = montoDiasNormales + montoFeriados + montoVacaciones + montoEnfermedad + montoHorasExtra + montoBonos;
 			return sueldoBruto;
 		}
 		else { //queda solo la opcion diaria
