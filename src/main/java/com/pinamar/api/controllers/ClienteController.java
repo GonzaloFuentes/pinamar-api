@@ -32,11 +32,14 @@ import com.pinamar.api.negocio.EmpleadoPorHora;
 import com.pinamar.api.negocio.EmpleadoView;
 import com.pinamar.api.negocio.Factura;
 import com.pinamar.api.negocio.InformeDTO;
+import com.pinamar.api.negocio.InformeVariosDTO;
 import com.pinamar.api.negocio.Liquidacion;
 import com.pinamar.api.negocio.LiquidacionDTO;
+import com.pinamar.api.negocio.MovimientoDTO;
 import com.pinamar.api.negocio.Novedad;
 import com.pinamar.api.negocio.Recibo;
 import com.pinamar.api.negocio.ResumenEscuelaDTO;
+import com.pinamar.api.negocio.Transferencia;
 import com.pinamar.api.services.ClienteService;
 
 @RestController
@@ -192,7 +195,7 @@ public class ClienteController {
 	}
 	
 	@GetMapping("/informes")
-	public ResponseEntity<List<InformeDTO>> enviarAlBanco() {
+	public ResponseEntity<MovimientoDTO> enviarAlBanco() {
 		String origenCBU = "";
 		String destinoCBU = "";
 		double amount = 0;
@@ -239,7 +242,43 @@ public class ClienteController {
 			InformeDTO info = new InformeDTO(origenCBU, destinoCBU, amount);
 			informes.add(info);
 		}
-		return ResponseEntity.ok(informes);
+		List<Transferencia> transf = new ArrayList<Transferencia>();
+		for (InformeDTO i : informes) {
+			if(i.getDestinoCBU().equalsIgnoreCase("1942414460182641")) {
+				//cobro
+				Transferencia t = new Transferencia(i.getOrigenCBU(), (float )i.getAmount());
+				transf.add(t);
+			}
+		}
+		InformeVariosDTO infCobro = new InformeVariosDTO("1942414460182641", transf); //este le pega al cobro, entonces el cliente nos paga a nostros
+		transf = new ArrayList<Transferencia>();
+		List<InformeVariosDTO> pagosClienteAEmpleado = new ArrayList<InformeVariosDTO>();
+		for(InformeDTO informe : informes) {
+			if(!informe.getDestinoCBU().equalsIgnoreCase("1942414460182641")) {
+				InformeVariosDTO inf = null;
+				for(InformeVariosDTO i : pagosClienteAEmpleado) {
+					if(i.getDestinoCBU().equalsIgnoreCase(informe.getOrigenCBU())) {
+						inf = i;
+					}
+				}
+				if(inf == null) {
+					Transferencia t = new Transferencia(informe.getDestinoCBU(), (float) informe.getAmount());
+					List<Transferencia> aux = new ArrayList<Transferencia>();
+					aux.add(t);
+					inf = new InformeVariosDTO(informe.getOrigenCBU(), aux);
+					pagosClienteAEmpleado.add(inf);
+				}
+				else {
+					Transferencia t = inf.getTransferenciaByDestino(informe.getDestinoCBU());
+					if(t == null) {
+						t = new Transferencia(informe.getDestinoCBU(), (float) informe.getAmount());
+						inf.getTransferenciasUnicas().add(t);
+					}
+				}
+			}
+		}
+		MovimientoDTO mov = new MovimientoDTO(infCobro, pagosClienteAEmpleado);
+		return ResponseEntity.ok(mov);
 	}
 	
 	@PostMapping("/empleados/{_id}/conceptos")
