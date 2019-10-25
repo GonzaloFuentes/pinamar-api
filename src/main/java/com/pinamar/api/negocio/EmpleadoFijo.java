@@ -18,7 +18,7 @@ public class EmpleadoFijo extends Empleado {
 	private int diasTrabajados; //son los dias normales de trabajo, pagan por 1. ademas de para hacer la cuenta, se quiere guardar
 	private int diasContratados;
 	
-	public EmpleadoFijo(ObjectId _id, int dni, String cuit, String nombre, String direccion, String puesto, Date fechaIngreso, String tipoLiquidacion, double sueldoBase, 
+	public EmpleadoFijo(ObjectId _id, String dni, String cuit, String nombre, String direccion, String puesto, Date fechaIngreso, String tipoLiquidacion, double sueldoBase, 
 			int diasAusentes, int diasEnfermedad, int diasVacaciones, int horasExtra, int feriados, int diasTrabajados, List<Concepto> conceptos, String cbu, List<ObjectId> recibos, Date ultimaLiquidacion, int diasContratados) {
 		super(_id, dni, cuit, nombre, direccion, puesto, fechaIngreso, tipoLiquidacion, conceptos, cbu, recibos, ultimaLiquidacion);
 		this.sueldoBase = sueldoBase;
