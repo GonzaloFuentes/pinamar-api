@@ -91,9 +91,10 @@ public class EmpleadoFijo extends Empleado {
 			double montoAusentes = (sueldoBase/diasContratados) * diasAusentes;
 			double montoHorasExtra = (sueldoBase/horasTotales) * 1.5 * horasExtra;
 			double montoBonos = 0;
-			for (Concepto c : this.getConceptos())
-				if(c.getTipo().equalsIgnoreCase("BONIFICACION"))
-					montoBonos += (c.getValor()*sueldoBase); //siempre es un porcentaje
+			if(this.getConceptos() != null)
+				for (Concepto c : this.getConceptos())
+					if(c.getTipo().equalsIgnoreCase("BONIFICACION"))
+						montoBonos += (c.getValor()*sueldoBase); //siempre es un porcentaje
 			double sueldoBruto = montoDiasNormales + montoFeriados + montoVacaciones + montoEnfermedad - montoAusentes + montoHorasExtra + montoBonos;
 			return sueldoBruto;
 		}
@@ -106,9 +107,10 @@ public class EmpleadoFijo extends Empleado {
 			double montoAusentes = (sueldoBase/diasContratados) * diasAusentes;
 			double montoHorasExtra = (sueldoBase/horasTotales) * 1.5 * horasExtra;
 			double montoBonos = 0;
-			for (Concepto c : this.getConceptos())
-				if(c.getTipo().equalsIgnoreCase("BONIFICACION"))
-					montoBonos += (c.getValor()*sueldoBase); //siempre es un porcentaje
+			if(this.getConceptos() != null)
+				for (Concepto c : this.getConceptos())
+					if(c.getTipo().equalsIgnoreCase("BONIFICACION"))
+						montoBonos += (c.getValor()*sueldoBase); //siempre es un porcentaje
 			double sueldoBruto = montoDiasNormales + montoFeriados + montoVacaciones + montoEnfermedad - montoAusentes + montoHorasExtra + montoBonos;
 			return sueldoBruto;
 		}
@@ -121,9 +123,10 @@ public class EmpleadoFijo extends Empleado {
 			double montoAusentes = (sueldoBase/diasContratados) * diasAusentes;
 			double montoHorasExtra = (sueldoBase/horasTotales) * 1.5 * horasExtra;
 			double montoBonos = 0;
-			for (Concepto c : this.getConceptos())
-				if(c.getTipo().equalsIgnoreCase("BONIFICACION"))
-					montoBonos += (c.getValor()*sueldoBase); //siempre es un porcentaje
+			if(this.getConceptos() != null)
+				for (Concepto c : this.getConceptos())
+					if(c.getTipo().equalsIgnoreCase("BONIFICACION"))
+						montoBonos += (c.getValor()*sueldoBase); //siempre es un porcentaje
 			double sueldoBruto = montoDiasNormales + montoFeriados + montoVacaciones + montoEnfermedad - montoAusentes + montoHorasExtra + montoBonos;
 			return sueldoBruto;
 		}
@@ -138,9 +141,10 @@ public class EmpleadoFijo extends Empleado {
 				sueldoBruto += sueldoBase * 1.5 * horasExtra;
 			}
 			double montoBonos = 0;
-			for (Concepto c : this.getConceptos())
-				if(c.getTipo().equalsIgnoreCase("BONIFICACION"))
-					montoBonos += (c.getValor()*sueldoBase); //siempre es un porcentaje
+			if(this.getConceptos() != null)
+				for (Concepto c : this.getConceptos())
+					if(c.getTipo().equalsIgnoreCase("BONIFICACION"))
+						montoBonos += (c.getValor()*sueldoBase); //siempre es un porcentaje
 			sueldoBruto += montoBonos;
 			return sueldoBruto;
 		}
@@ -149,11 +153,12 @@ public class EmpleadoFijo extends Empleado {
 	private double calcularSueldoNeto() {
 		double montoDeducciones = 0;
 		double sueldoBruto = this.calcularSueldoBruto();
-		for (Concepto c : this.getConceptos()) {
-			if(c.getTipo().equalsIgnoreCase("DEDUCCION")) {
-				montoDeducciones += (sueldoBruto * c.getValor());
+		if(this.getConceptos() != null)
+			for (Concepto c : this.getConceptos()) {
+				if(c.getTipo().equalsIgnoreCase("DEDUCCION")) {
+					montoDeducciones += (sueldoBruto * c.getValor());
+				}
 			}
-		}
 		double sueldoNeto = sueldoBruto - montoDeducciones;
 		return sueldoNeto;
 	}
@@ -169,14 +174,15 @@ public class EmpleadoFijo extends Empleado {
 			double sueldoBruto = this.calcularSueldoBruto();
 			double sueldoNeto = this.calcularSueldoNeto();
 			List<ConceptoRecibo> crs = new ArrayList<ConceptoRecibo>();
-			for(Concepto c : this.getConceptos()) {
-				ConceptoRecibo cr;
-				if(c.getTipo().equalsIgnoreCase("BONIFICACION"))
-					cr = new ConceptoRecibo(c.getNombre(), c.getValor(), sueldoBase*c.getValor());
-				else
-					cr = new ConceptoRecibo(c.getNombre(), c.getValor(), sueldoBruto*(-1)*c.getValor()); //si es deduccion resta
-				crs.add(cr);
-			}
+			if(this.getConceptos() != null)
+				for(Concepto c : this.getConceptos()) {
+					ConceptoRecibo cr;
+					if(c.getTipo().equalsIgnoreCase("BONIFICACION"))
+						cr = new ConceptoRecibo(c.getNombre(), c.getValor(), sueldoBase*c.getValor());
+					else
+						cr = new ConceptoRecibo(c.getNombre(), c.getValor(), sueldoBruto*(-1)*c.getValor()); //si es deduccion resta
+					crs.add(cr);
+				}
 			r = new Recibo(new ObjectId(), crs, sueldoBruto, sueldoNeto);
 			this.addRecibo(new ObjectId(r.getId()));
 			this.setUltimaLiquidacion(new Date());
