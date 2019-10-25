@@ -272,7 +272,7 @@ public class ClienteController {
 					Transferencia t = inf.getTransferenciaByDestino(informe.getDestinoCBU());
 					if(t == null) {
 						t = new Transferencia(informe.getDestinoCBU(), (float) informe.getAmount());
-						inf.getTransferenciasUnicas().add(t);
+						inf.getTranferenciasUnicas().add(t);
 					}
 				}
 			}
