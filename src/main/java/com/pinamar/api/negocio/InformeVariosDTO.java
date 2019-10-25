@@ -4,36 +4,32 @@ import java.util.List;
 
 public class InformeVariosDTO {
 	
-	private String destinoCBU;
+	private String cbuDestino;
 	private List<Transferencia> tranferenciasUnicas;
 	
-	public InformeVariosDTO(String destinoCBU, List<Transferencia> tranferenciasUnicas) {
+	public InformeVariosDTO(String cbuDestino, List<Transferencia> tranferenciasUnicas) {
 		super();
-		this.destinoCBU = destinoCBU;
+		this.cbuDestino = cbuDestino;
 		this.tranferenciasUnicas = tranferenciasUnicas;
 	}
-	
-	public String getDestinoCBU() {
-		return destinoCBU;
-	}
 
-	public void setDestinoCBU(String destinoCBU) {
-		this.destinoCBU = destinoCBU;
+	public String getCbuDestino() {
+		return cbuDestino;
 	}
-
+	public void setCbuDestino(String cbuDestino) {
+		this.cbuDestino = cbuDestino;
+	}
 	public List<Transferencia> getTranferenciasUnicas() {
 		return tranferenciasUnicas;
 	}
-
 	public void setTranferenciasUnicas(List<Transferencia> tranferenciasUnicas) {
 		this.tranferenciasUnicas = tranferenciasUnicas;
 	}
 
-
 	public Transferencia getTransferenciaByDestino(String destino) {
 		Transferencia aux = null;
 		for(Transferencia t : this.tranferenciasUnicas) {
-			if(t.getOrigenCBU().equalsIgnoreCase(destino)) {
+			if(t.getCbuOrigen().equalsIgnoreCase(destino)) {
 				aux = t;
 			}
 		}

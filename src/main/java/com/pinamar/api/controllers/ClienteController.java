@@ -257,7 +257,7 @@ public class ClienteController {
 			if(!informe.getDestinoCBU().equalsIgnoreCase("1942414460182641")) {
 				InformeVariosDTO inf = null;
 				for(InformeVariosDTO i : pagosClienteAEmpleado) {
-					if(i.getDestinoCBU().equalsIgnoreCase(informe.getOrigenCBU())) {
+					if(i.getCbuDestino().equalsIgnoreCase(informe.getOrigenCBU())) {
 						inf = i;
 					}
 				}

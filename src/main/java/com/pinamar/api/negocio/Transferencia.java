@@ -2,31 +2,25 @@ package com.pinamar.api.negocio;
 
 public class Transferencia {
 
-	private String origenCBU;
+	private String cbuOrigen;
 	private float amount;
 	
-	public Transferencia(String origenCBU, float amount) {
+	public Transferencia(String cbuOrigen, float amount) {
 		super();
-		this.origenCBU = origenCBU;
+		this.cbuOrigen = cbuOrigen;
 		this.amount = amount;
 	}
-
-	public String getOrigenCBU() {
-		return origenCBU;
+	public String getCbuOrigen() {
+		return cbuOrigen;
 	}
-
-	public void setOrigenCBU(String origenCBU) {
-		this.origenCBU = origenCBU;
+	public void setCbuOrigen(String cbuOrigen) {
+		this.cbuOrigen = cbuOrigen;
 	}
-
 	public float getAmount() {
 		return amount;
 	}
-
 	public void setAmount(float amount) {
 		this.amount = amount;
 	}
-	
-	
 	
 }
